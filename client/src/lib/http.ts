@@ -1,0 +1,180 @@
+import envConfig from "@/config";
+import {
+  EntityError,
+  EntityErrorPayload,
+  HttpError,
+  HttpErrorPayload,
+} from "@/lib/error";
+import { normalizePath } from "@/lib/format";
+import { authStorage } from "@/storage/features/auth.storage";
+import { LoginRes } from "@/types/auth.type";
+import { redirect } from "next/navigation";
+
+type CustomOptions = Omit<RequestInit, "method"> & {
+  baseUrl?: string | undefined;
+  responseType?: "json" | "blob" | "text";
+};
+
+const ENTITY_ERROR_STATUS = 422;
+const AUTHENTICATION_ERROR_STATUS = 401;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let clientLogoutRequest: null | Promise<any> = null;
+export const isClient = () => typeof window !== "undefined";
+
+const request = async <Response>(
+  method: "GET" | "POST" | "PUT" | "DELETE",
+  url: string,
+  options: CustomOptions = {}
+) => {
+  let body: FormData | string | undefined = undefined;
+  if (options?.body instanceof FormData) {
+    body = options.body;
+  } else if (options?.body) {
+    body = JSON.stringify(options.body);
+  }
+  const baseHeaders: {
+    [key: string]: string;
+  } =
+    body instanceof FormData
+      ? {}
+      : {
+          "Content-Type": "application/json",
+        };
+  if (isClient()) {
+    const sessionToken = authStorage.getAccessToken();
+    if (sessionToken) {
+      baseHeaders.Authorization = `Bearer ${sessionToken}`;
+    }
+  } else {
+    const { cookies } = await import("next/headers");
+    const sessionToken = (await cookies()).get("accessToken")?.value;
+    if (sessionToken) {
+      baseHeaders.Authorization = `Bearer ${sessionToken}`;
+    }
+  }
+
+  // Nếu không truyền baseUrl (hoặc baseUrl = undefined) thì lấy từ envConfig.NEXT_PUBLIC_API_ENDPOINT
+  // Nếu truyền baseUrl thì lấy giá trị truyền vào, truyền vào '' thì đồng nghĩa với việc chúng ta gọi API đến Next.js Server
+  const baseUrl =
+    options?.baseUrl === undefined
+      ? envConfig.NEXT_PUBLIC_API_ENDPOINT
+      : options.baseUrl;
+
+  const fullUrl = url.startsWith("/")
+    ? `${baseUrl}${url}`
+    : `${baseUrl}/${url}`;
+
+  const res = await fetch(fullUrl, {
+    ...options,
+    headers: {
+      ...baseHeaders,
+      ...options?.headers,
+    } as Record<string, string>,
+    body,
+    method,
+  });
+
+  let payload;
+  if (options?.responseType === "blob") {
+    payload = await res.blob();
+  } else if (options?.responseType === "text") {
+    payload = await res.text();
+  } else {
+    payload = await res.json();
+  }
+
+  const data = {
+    status: res.status,
+    payload: payload as Response,
+  };
+  // Interceptor là nời chúng ta xử lý request và response trước khi trả về cho phía component
+  if (!res.ok) {
+    if (res.status === ENTITY_ERROR_STATUS) {
+      throw new EntityError(
+        data as {
+          status: 422;
+          payload: EntityErrorPayload;
+        }
+      );
+    } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
+      if (url.includes("auth/signin")) {
+        throw new HttpError(
+          data as { status: number; payload: HttpErrorPayload }
+        );
+      }
+      if (isClient() && !url.includes("auth/signin")) {
+        if (!clientLogoutRequest) {
+          clientLogoutRequest = fetch("/api/auth/logout", {
+            method: "POST",
+            body: null,
+            headers: {
+              ...baseHeaders,
+            } as Record<string, string>,
+          });
+          try {
+            await clientLogoutRequest;
+          } catch {
+          } finally {
+            authStorage.clear();
+            clientLogoutRequest = null;
+            location.href = "/login";
+          }
+        }
+      } else {
+        const sessionToken = (
+          options?.headers as Record<string, string>
+        )?.Authorization.split("Bearer ")[1];
+        redirect(`/logout?sessionToken=${sessionToken}`);
+      }
+    } else {
+      throw new HttpError(
+        data as { status: number; payload: HttpErrorPayload }
+      );
+    }
+  }
+  // Đảm bảo logic dưới đây chỉ chạy ở phía client (browser)
+  if (isClient()) {
+    const normalizeUrl = normalizePath(url);
+    if (normalizeUrl === "api/auth/login") {
+      const { accessToken, account } = payload as LoginRes;
+      authStorage.saveAuth(account, accessToken);
+    } else if ("api/auth/logout" === normalizeUrl) {
+      localStorage.clear();
+    }
+  }
+  return data;
+};
+
+const http = {
+  get<Response>(
+    url: string,
+    options?: Omit<CustomOptions, "body"> | undefined
+  ) {
+    return request<Response>("GET", url, options);
+  },
+  post<Response>(
+    url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: any,
+    options?: Omit<CustomOptions, "body"> | undefined
+  ) {
+    return request<Response>("POST", url, { ...options, body });
+  },
+  put<Response>(
+    url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body?: any,
+    options?: Omit<CustomOptions, "body"> | undefined
+  ) {
+    return request<Response>("PUT", url, { ...options, body });
+  },
+  delete<Response>(
+    url: string,
+    options?: Omit<CustomOptions, "body"> | undefined
+  ) {
+    return request<Response>("DELETE", url, { ...options });
+  },
+};
+
+export default http;
