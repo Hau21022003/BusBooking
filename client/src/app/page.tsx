@@ -1,14 +1,19 @@
-import SeatIcon from "@/components/icon/seat-icon";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import jwt from "jsonwebtoken";
+import { JwtPayload } from "@/types/jwt.type";
 
-export default function Home() {
-  return (
-    <div className="bg-gray-600 h-screen">
-      <SeatIcon size={70} />
-      <SeatIcon size={70} variant="head" />
-      <SeatIcon size={70} variant="middle" />
-      <SeatIcon size={70} variant="end" />
-      <SeatIcon size={70} variant="selected" />
-      <SeatIcon size={70} variant="disabled" />
-    </div>
-  );
+export default async function Home() {
+  const cookieStorage = await cookies();
+  const accessToken = cookieStorage.get("accessToken")?.value;
+
+  if (accessToken) {
+    const decoded = jwt.decode(accessToken) as JwtPayload | null;
+
+    if (decoded?.role === "ADMIN") {
+      return redirect("/admin/bus-list");
+    }
+  }
+
+  return redirect("/product-list");
 }

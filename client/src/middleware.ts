@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
+import { Role } from "@/enums/user-role.enum";
+import { JwtPayload } from "@/types/jwt.type";
 
 const privatePaths = ["/orders"];
 const adminPaths = ["/admin"];
@@ -9,9 +11,9 @@ const authPaths = ["/login", "/signup"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
-  let role;
+  let role: Role | undefined = undefined;
   if (accessToken) {
-    const decodeAccessToken = jwt.decode(accessToken) as { role: string };
+    const decodeAccessToken = jwt.decode(accessToken) as JwtPayload;
     role = decodeAccessToken.role;
   }
 
@@ -30,7 +32,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Nếu không phải admin mà vào /admin -> redirect về 403
-  if (isAdminPage && role !== "admin") {
+  if (isAdminPage && role !== "ADMIN") {
     return NextResponse.redirect(new URL("/403", request.url));
   }
 

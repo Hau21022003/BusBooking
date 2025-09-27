@@ -6,7 +6,13 @@ import { AuthModule } from 'src/auth/auth.module';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { IsExistConstraint } from 'src/common/validators/is-exist-constraint.validator';
 import { dbOptions, load } from 'src/config/db.config';
+import { BusModule } from 'src/modules/bus/bus.module';
 import { UsersModule } from 'src/modules/users/users.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { FileUploadService } from 'src/modules/file-upload/file-upload.service';
+import { FileUploadController } from 'src/modules/file-upload/file-upload.controller';
+import { FileUploadModule } from 'src/modules/file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -22,6 +28,9 @@ import { UsersModule } from 'src/modules/users/users.module';
     }),
     AuthModule,
     UsersModule,
+    BusModule,
+    CloudinaryModule,
+    FileUploadModule,
   ],
   providers: [
     {

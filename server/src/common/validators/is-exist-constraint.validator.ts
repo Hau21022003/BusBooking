@@ -14,8 +14,6 @@ export class IsExistConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args: ValidationArguments) {
     const [EntityClass, column = 'id'] = args.constraints;
     const repo = this.dataSource.getRepository(EntityClass);
-    // const record = await repo.findOne({ where: { [column]: value } });
-    // return !!record;
     try {
       const record = await repo.findOne({ where: { [column]: value } });
       return !!record;
