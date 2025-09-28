@@ -1,9 +1,12 @@
-// "use client";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import { getPathname } from "@/lib/get-current-pathname";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBus, faLocationDot, faRoute } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBus,
+  faLocationDot,
+  faRoute,
+} from "@fortawesome/free-solid-svg-icons";
 
 const AdminSidebar = async () => {
   const pathname = await getPathname();
@@ -16,7 +19,9 @@ const AdminSidebar = async () => {
       active: pathname === "/admin/bus-list" || pathname === "/admin/save-bus",
     },
     {
-      icon: <FontAwesomeIcon icon={faLocationDot} size="xl" className="w-6 h-6" />,
+      icon: (
+        <FontAwesomeIcon icon={faLocationDot} size="xl" className="w-6 h-6" />
+      ),
       label: "Trạm Xe",
       url: "/admin/station",
       active: pathname === "/admin/station",
@@ -52,7 +57,7 @@ const AdminSidebar = async () => {
       >
         <nav className="flex flex-col gap-3">
           {menuOptions.map((item) => (
-            <Link
+            <a
               key={item.label}
               href={item.url}
               className={`flex items-center outline-none justify-between py-2 rounded-lg transition cursor-pointer ${
@@ -68,7 +73,7 @@ const AdminSidebar = async () => {
                   {item.label}
                 </span>
               </div>
-            </Link>
+            </a>
           ))}
         </nav>
       </div>

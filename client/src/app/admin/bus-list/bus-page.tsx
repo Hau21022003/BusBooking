@@ -1,3 +1,4 @@
+// bus-page.tsx
 "use client";
 import BusTable from "@/app/admin/bus-list/components/bus-table";
 import SaveDialog from "@/app/admin/bus-list/components/save-dialog";

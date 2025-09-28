@@ -1,3 +1,4 @@
+//page.tsx
 import { busApiRequest } from "@/api-requests/bus";
 import BusPage from "@/app/admin/bus-list/bus-page";
 import { Bus } from "@/types/bus.type";

@@ -9,10 +9,9 @@ import { dbOptions, load } from 'src/config/db.config';
 import { BusModule } from 'src/modules/bus/bus.module';
 import { UsersModule } from 'src/modules/users/users.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
-import { MulterModule } from '@nestjs/platform-express';
-import { FileUploadService } from 'src/modules/file-upload/file-upload.service';
-import { FileUploadController } from 'src/modules/file-upload/file-upload.controller';
 import { FileUploadModule } from 'src/modules/file-upload/file-upload.module';
+import { ProvinceModule } from 'src/modules/province/province.module';
+import { StationModule } from 'src/modules/station/station.module';
 
 @Module({
   imports: [
@@ -31,6 +30,8 @@ import { FileUploadModule } from 'src/modules/file-upload/file-upload.module';
     BusModule,
     CloudinaryModule,
     FileUploadModule,
+    ProvinceModule,
+    StationModule,
   ],
   providers: [
     {
