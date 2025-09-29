@@ -12,6 +12,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { FileUploadModule } from 'src/modules/file-upload/file-upload.module';
 import { ProvinceModule } from 'src/modules/province/province.module';
 import { StationModule } from 'src/modules/station/station.module';
+import { RouteModule } from 'src/modules/route/route.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { StationModule } from 'src/modules/station/station.module';
     FileUploadModule,
     ProvinceModule,
     StationModule,
+    RouteModule,
   ],
   providers: [
     {
