@@ -13,6 +13,9 @@ import { FileUploadModule } from 'src/modules/file-upload/file-upload.module';
 import { ProvinceModule } from 'src/modules/province/province.module';
 import { StationModule } from 'src/modules/station/station.module';
 import { RouteModule } from 'src/modules/route/route.module';
+import { TripModule } from 'src/modules/trip/trip.module';
+import { SchedulesModule } from 'src/modules/schedules/schedules.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -26,6 +29,7 @@ import { RouteModule } from 'src/modules/route/route.module';
       useFactory: dbOptions,
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     UsersModule,
     BusModule,
@@ -34,6 +38,8 @@ import { RouteModule } from 'src/modules/route/route.module';
     ProvinceModule,
     StationModule,
     RouteModule,
+    TripModule,
+    SchedulesModule,
   ],
   providers: [
     {

@@ -39,6 +39,8 @@ import { RouteStopType } from "@/enums/route-stop";
 import { useRouter } from "next/navigation";
 import { handleErrorApi } from "@/lib/error";
 import { routeApiRequest } from "@/api-requests/route-api";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHouse, faLocation } from "@fortawesome/free-solid-svg-icons";
 
 interface SaveDialogProps {
   open: boolean;
@@ -178,13 +180,31 @@ export default function SaveDialog({
                             )}
                           >
                             <FormControl>
-                              <SelectTrigger className="w-32">
-                                <SelectValue placeholder="Chọn loại" />
+                              <SelectTrigger className="sm:w-28">
+                                <div className="flex items-center gap-2">
+                                  {form.watch(`stops.${stationIdx}.type`) ===
+                                    RouteStopType.STATION && (
+                                    <FontAwesomeIcon
+                                      size="sm"
+                                      icon={faHouse}
+                                      className="w-5 h-5"
+                                    />
+                                  )}
+                                  {form.watch(`stops.${stationIdx}.type`) ===
+                                    RouteStopType.STOP && (
+                                    <FontAwesomeIcon
+                                      size="sm"
+                                      icon={faLocation}
+                                      className="w-5 h-5"
+                                    />
+                                  )}
+                                  <SelectValue placeholder="Chọn loại" />
+                                </div>
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <SelectItem value={RouteStopType.STOP}>
-                                Điểm dừng
+                                Điểm
                               </SelectItem>
                               <SelectItem value={RouteStopType.STATION}>
                                 Trạm
@@ -262,7 +282,7 @@ export default function SaveDialog({
                                   );
                                 }
                               }}
-                              className="w-10 min-w-0 outline-none leading-none"
+                              className="w-11 min-w-0 outline-none leading-none"
                             />
                             <p className="p-[2px] font-medium text-white text-sm px-3 bg-gray-500 rounded-md">
                               m

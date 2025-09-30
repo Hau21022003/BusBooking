@@ -8,5 +8,6 @@ import { Bus } from 'src/modules/bus/entities/bus.entity';
   imports: [TypeOrmModule.forFeature([Bus])],
   controllers: [BusController],
   providers: [BusService],
+  exports: [BusService],
 })
 export class BusModule {}

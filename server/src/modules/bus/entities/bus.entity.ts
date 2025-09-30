@@ -3,7 +3,6 @@ import { BusType } from 'src/modules/bus/enums/bus-type.enum';
 import { SeatType } from 'src/modules/bus/enums/seat-type.enum';
 
 export class Seat {
-  id: string;
   row: number;
   col: number;
   status: 'available' | 'hidden' | 'reserved';
