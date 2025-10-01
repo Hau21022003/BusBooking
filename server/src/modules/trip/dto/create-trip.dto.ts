@@ -33,5 +33,5 @@ export class CreateTripDto {
   status?: TripStatus;
 
   @IsObject()
-  prices: Record<SeatType, number>;
+  prices: Partial<Record<SeatType, number>>;
 }

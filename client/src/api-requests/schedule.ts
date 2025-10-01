@@ -15,7 +15,7 @@ export const scheduleApiRequest = {
     await revalidateApiRequest("schedule");
     return res;
   },
-  update: async (id: string, body: CreateSchedule) => {
+  update: async (id: number, body: CreateSchedule) => {
     const res = await http.put<Schedule>(`${BASE_URL}/${id}`, body);
     await revalidateApiRequest("schedule");
     return res;
@@ -27,7 +27,7 @@ export const scheduleApiRequest = {
     await revalidateApiRequest("schedule");
     return res;
   },
-  delete: async (id: string) => {
+  delete: async (id: number) => {
     const res = await http.delete(`${BASE_URL}/${id}`);
     await revalidateApiRequest("schedule");
     return res;

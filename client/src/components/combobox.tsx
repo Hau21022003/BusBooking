@@ -61,7 +61,10 @@ export default function Combobox({
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent
+        align="start"
+        className={cn("w-[--radix-popover-trigger-width] p-0")}
+      >
         <Command>
           <CommandInput placeholder="Search..." className="h-9" />
           <CommandList>

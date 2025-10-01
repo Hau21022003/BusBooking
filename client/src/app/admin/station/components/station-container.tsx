@@ -23,7 +23,7 @@ export default function StationContainer({
       <div className="w-full max-w-screen-lg mx-auto space-y-4">
         <div
           className={cn(
-            "flex flex-col gap-4 md:flex-row md:justify-between md:items-center",
+            "flex gap-4 flex-row justify-between items-center",
             "bg-white rounded-md p-3 px-6"
           )}
         >

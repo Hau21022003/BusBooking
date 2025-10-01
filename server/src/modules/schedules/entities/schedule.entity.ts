@@ -20,14 +20,14 @@ export class Schedule {
   @Column()
   busId: string;
 
-  @Column({ type: 'text', array: true })
-  departureTimes: string[];
+  @Column({ type: 'jsonb', nullable: true })
+  departureTimes: { hour: number; minute: number }[];
 
   @Column()
   active: boolean;
 
   @Column({ type: 'jsonb' })
-  prices: Record<SeatType, number>;
+  prices: Partial<Record<SeatType, number>>;
 
   @ManyToOne(() => Bus, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'busId' })

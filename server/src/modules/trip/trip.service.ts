@@ -65,8 +65,7 @@ export class TripService {
 
       for (const schedule of schedules) {
         for (const depTime of schedule.departureTimes) {
-          // parse giờ phút từ departureTimes (vd: "08:30")
-          const [hour, minute] = depTime.split(':').map(Number);
+          const { hour, minute } = depTime;
 
           const departureDate = new Date(currentDay);
           departureDate.setHours(hour, minute, 0, 0);

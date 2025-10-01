@@ -4,6 +4,8 @@ import { getPathname } from "@/lib/get-current-pathname";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBus,
+  faBusinessTime,
+  faBusSide,
   faLocationDot,
   faRoute,
 } from "@fortawesome/free-solid-svg-icons";
@@ -31,6 +33,20 @@ const AdminSidebar = async () => {
       label: "Tuyến",
       url: "/admin/route",
       active: pathname === "/admin/route",
+    },
+    {
+      icon: (
+        <FontAwesomeIcon icon={faBusinessTime} size="xl" className="w-6 h-6" />
+      ),
+      label: "Lịch trình",
+      url: "/admin/schedule",
+      active: pathname === "/admin/schedule",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faBusSide} size="xl" className="w-6 h-6" />,
+      label: "Chuyến xe",
+      url: "/admin/trip",
+      active: pathname === "/admin/trip",
     },
   ];
 

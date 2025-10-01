@@ -1,18 +1,21 @@
-import { SeatType } from "@/enums/bus.enum";
 import z from "zod";
+
+const departureTimeSchema = z.object({
+  hour: z.number().int().min(0).max(23),
+  minute: z.number().int().min(0).max(59),
+});
 
 export const createScheduleSchema = z.object({
   routeId: z.string("routeId is required").min(1, "routeId is required"),
   busId: z.string("busId is required").min(1, "busId is required"),
-  departureTimes: z.array(
-    z
-      .string()
-      .regex(
-        /^([0-1]\d|2[0-3]):([0-5]\d)$/,
-        "Invalid time format, expected HH:mm"
-      )
-  ),
-  prices: z.record(z.enum(SeatType), z.number()),
+  departureTimes: z.array(departureTimeSchema),
+  prices: z.object({
+    STANDARD: z.number().optional(),
+    FRONT: z.number().optional(),
+    MIDDLE: z.number().optional(),
+    BACK: z.number().optional(),
+    VIP: z.number().optional(),
+  }),
   active: z.boolean(),
 });
 
