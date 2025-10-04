@@ -10,5 +10,6 @@ import { SchedulesModule } from 'src/modules/schedules/schedules.module';
   imports: [TypeOrmModule.forFeature([Trip]), BusModule, SchedulesModule],
   controllers: [TripController],
   providers: [TripService],
+  exports: [TripService],
 })
 export class TripModule {}

@@ -19,7 +19,8 @@ export default function SeatIcon({
   const colors: Record<SeatVariant, { stroke: string; fill: string }> = {
     default: { stroke: "#B8B8B8", fill: "#fff" },
     selected: { stroke: "#27ae60", fill: "#8be5b0" },
-    disabled: { stroke: "#F2F2F2", fill: "#E0E0E0" },
+    // disabled: { stroke: "#F2F2F2", fill: "#E0E0E0" },
+    disabled: { stroke: "#BDBDBD", fill: "#E0E0E0" },
     front: { stroke: "#ae70ff", fill: "#fff" }, // blue border
     middle: { stroke: "#fba442", fill: "#fff" }, // orange border
     back: { stroke: "#6bd600", fill: "#fff" }, // purple border

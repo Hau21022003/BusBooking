@@ -1,5 +1,6 @@
 import { SeatType } from "@/enums/bus.enum";
 import { SeatStatus, TripStatus } from "@/enums/trip.enum";
+import { Booking } from "@/types/booking.type";
 import { Bus } from "@/types/bus.type";
 import { Route } from "@/types/route.type";
 
@@ -20,11 +21,13 @@ export type Trip = {
   prices: Record<SeatType, number>;
   bus: Bus;
   route: Route;
+  bookings?: Booking[];
 };
 
 export type TripSearchParams = {
   busId?: string;
   routeId?: string;
-  page?: string;
-  date?: string;
+  pageNumber?: string;
+  startDate?: string;
+  endDate?: string;
 };

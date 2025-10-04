@@ -16,6 +16,7 @@ import { RouteModule } from 'src/modules/route/route.module';
 import { TripModule } from 'src/modules/trip/trip.module';
 import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BookingModule } from 'src/modules/booking/booking.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     RouteModule,
     TripModule,
     SchedulesModule,
+    BookingModule,
   ],
   providers: [
     {

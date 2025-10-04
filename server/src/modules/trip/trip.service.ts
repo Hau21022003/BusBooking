@@ -2,11 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SeatTrip, Trip } from 'src/modules/trip/entities/trip.entity';
-import { Repository } from 'typeorm';
+import { Between, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { BusService } from 'src/modules/bus/bus.service';
 import { SeatStatus } from 'src/modules/trip/enums/seat-status.enum';
 import { SchedulesService } from 'src/modules/schedules/schedule.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { FindAllDto } from 'src/modules/trip/dto/find-all.dto';
+import { UpdateStatusDto } from 'src/modules/trip/dto/update-status.dto';
 
 @Injectable()
 export class TripService {
@@ -24,21 +26,81 @@ export class TripService {
     return this.tripRepository.save(data);
   }
 
-  findAll() {
-    return this.tripRepository.find({ order: { createdAt: 'DESC' } });
+  async findAll(findAllDto: FindAllDto) {
+    const where: any = {};
+
+    if (findAllDto.busId) {
+      where.busId = findAllDto.busId;
+    }
+
+    if (findAllDto.routeId) {
+      where.routeId = findAllDto.routeId;
+    }
+
+    if (findAllDto.startDate && findAllDto.endDate) {
+      const start = new Date(findAllDto.startDate);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(findAllDto.endDate);
+      end.setHours(23, 59, 59, 999);
+
+      where.departureTime = Between(start, end);
+    } else if (findAllDto.startDate) {
+      const start = new Date(findAllDto.startDate);
+      start.setHours(0, 0, 0, 0);
+
+      where.departureTime = MoreThanOrEqual(start);
+    } else if (findAllDto.endDate) {
+      const end = new Date(findAllDto.endDate);
+      end.setHours(23, 59, 59, 999);
+
+      where.departureTime = LessThanOrEqual(end);
+    }
+
+    const [data, total] = await this.tripRepository.findAndCount({
+      where,
+      order: { departureTime: 'DESC' },
+      relations: ['bookings'],
+      skip: findAllDto.offset,
+      take: findAllDto.pageSize,
+    });
+
+    return {
+      data,
+      total,
+    };
   }
 
   findOne(id: number) {
     return this.tripRepository.findOneByOrFail({ id });
   }
 
-  async update(id: number, updateTripDto: CreateTripDto) {
-    const data = await this.processData(updateTripDto);
-    return this.tripRepository.update(id, data);
+  async updateStatus(id: number, updateStatusDto: UpdateStatusDto) {
+    return this.tripRepository.update(id, updateStatusDto);
   }
 
   remove(id: number) {
     return this.tripRepository.delete({ id });
+  }
+
+  async updateSeatStatus({
+    seatCol,
+    seatRow,
+    seatStatus,
+    tripId,
+  }: {
+    tripId: number;
+    seatRow: number;
+    seatCol: number;
+    seatStatus: SeatStatus;
+  }) {
+    const trip = await this.findOne(tripId);
+    const updateSeats = trip.seats.map((seat) =>
+      seat.row === seatRow && seat.col === seatCol
+        ? { ...seat, status: seatStatus }
+        : seat,
+    );
+    return this.tripRepository.update(tripId, { seats: updateSeats });
   }
 
   private async processData(dto: CreateTripDto) {

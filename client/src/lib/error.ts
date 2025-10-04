@@ -64,15 +64,25 @@ export const handleErrorApi = <T extends FieldValues>({
   setError?: UseFormSetError<T>;
   duration?: number;
 }) => {
-  
-
-  if (error instanceof EntityError && setError) {
-    error.payload.errors.forEach(({ field, messages }) => {
-      setError(field as Path<T>, {
-        type: "server",
-        message: messages[0],
+  if (error instanceof EntityError) {
+    if (setError) {
+      error.payload.errors.forEach(({ field, messages }) => {
+        setError(field as Path<T>, {
+          type: "server",
+          message: messages[0],
+        });
       });
-    });
+    } else {
+      const description = error.payload.errors
+        .map(({ field, messages }) => `${field}: ${messages[0]}`)
+        .join("\n");
+
+      toast.error("Error", {
+        description,
+        duration,
+        style: { whiteSpace: "pre-line" },
+      });
+    }
     return;
   }
 

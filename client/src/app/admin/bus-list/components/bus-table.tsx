@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
-import { BusType } from "@/enums/bus.enum";
+import { BusType, busTypeMap } from "@/enums/bus.enum";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
@@ -25,12 +25,12 @@ export default function BusTable({
   openSaveDialog: (selectedBus?: Bus) => void;
 }) {
   const router = useRouter();
-  const busTypeLabels: Record<BusType, string> = {
-    [BusType.SEAT_16]: "Xe 16 chỗ ngồi",
-    [BusType.SEAT_29]: "Xe 29 chỗ ngồi",
-    [BusType.SLEEPER_34]: "Xe giường nằm 34 chỗ",
-    [BusType.LIMOUSINE_9]: "Xe Limousine 9 chỗ",
-  };
+  // const busTypeLabels: Record<BusType, string> = {
+  //   [BusType.SEAT_16]: "Xe 16 chỗ ngồi",
+  //   [BusType.SEAT_29]: "Xe 29 chỗ ngồi",
+  //   [BusType.SLEEPER_34]: "Xe giường nằm 34 chỗ",
+  //   [BusType.LIMOUSINE_9]: "Xe Limousine 9 chỗ",
+  // };
 
   const deleteBus = async (busId: string) => {
     try {
@@ -72,7 +72,7 @@ export default function BusTable({
                 />
               </TableCell>
               <TableCell className="py-4 text-black">
-                {busTypeLabels[bus.type]}
+                {busTypeMap[bus.type]}
               </TableCell>
               <TableCell className="py-4 text-black">
                 {bus.licensePlate}

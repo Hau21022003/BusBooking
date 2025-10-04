@@ -16,7 +16,7 @@ export const defaultPaginationMeta: PaginationMeta = {
   totalPages: 0,
 };
 
-export type PaginationResponse<T> = {
+export type PaginatedResponse<T> = {
   total: number;
-  items: T[];
+  data: T[];
 };

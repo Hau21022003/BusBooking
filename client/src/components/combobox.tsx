@@ -28,6 +28,8 @@ interface ComboboxProps {
   placeholder?: string;
   onChange?: (value: string | null) => void;
   className?: string;
+  type?: "default" | "form";
+  icon?: React.ReactNode;
 }
 
 export default function Combobox({
@@ -36,6 +38,8 @@ export default function Combobox({
   placeholder = "Select option",
   onChange,
   className,
+  type = "form",
+  icon,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const handleSelect = (val: string) => {
@@ -50,15 +54,29 @@ export default function Combobox({
           variant="outline"
           role="combobox"
           className={cn(
-            "w-[200px] justify-between font-normal",
+            "w-[200px] justify-between items-center font-normal",
             className,
             !value && "text-muted-foreground"
           )}
         >
-          {value && value !== ""
-            ? options.find((opt) => opt.value === value)?.label
-            : placeholder}
-          <ChevronsUpDown className="opacity-50" />
+          {icon && <div className="shrink-0">{icon}</div>}
+          <p
+            className={cn(
+              "text-start flex-1 truncate",
+              type == "default" && "text-base"
+            )}
+          >
+            {value && value !== ""
+              ? options.find((opt) => opt.value === value)?.label
+              : placeholder}
+          </p>
+          <ChevronsUpDown
+            className={cn(
+              "shrink-0",
+              (!value || value === "") && "opacity-50",
+              type == "default" && "w-5 h-5"
+            )}
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent

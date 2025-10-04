@@ -12,3 +12,10 @@ export enum SeatType {
   BACK = "BACK",
   VIP = "VIP",
 }
+
+export const busTypeMap: Record<BusType, string> = {
+  SEAT_16: "Xe 16 chỗ",
+  LIMOUSINE_9: "Xe Limousine 9 chỗ",
+  SEAT_29: "Xe 29 chỗ",
+  SLEEPER_34: "Xe giường nằm 34 chỗ",
+};

@@ -23,8 +23,6 @@ export class CreateTripDto {
   @IsExists(Bus)
   busId: string;
 
-  // @IsDateString()
-  // departureTime: string;
   @IsDateString()
   departureTime: Date;
 

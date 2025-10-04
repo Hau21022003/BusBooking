@@ -1,4 +1,5 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { Booking } from 'src/modules/booking/entities/booking.entity';
 import { Bus } from 'src/modules/bus/entities/bus.entity';
 import { SeatType } from 'src/modules/bus/enums/seat-type.enum';
 import { Route } from 'src/modules/route/entities/route.entity';
@@ -9,6 +10,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -44,7 +46,7 @@ export class Trip extends BaseEntity {
   seats: SeatTrip[];
 
   @Column({ type: 'jsonb' })
-  prices: Record<SeatType, number>;
+  prices: Partial<Record<SeatType, number>>;
 
   @ManyToOne(() => Bus, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'busId' })
@@ -53,4 +55,7 @@ export class Trip extends BaseEntity {
   @ManyToOne(() => Route, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'routeId' })
   route: Route;
+
+  @OneToMany(() => Booking, (b) => b.trip)
+  bookings: Booking[];
 }

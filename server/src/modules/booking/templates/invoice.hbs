@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body { font-family: Arial, sans-serif; font-size: 12px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+      th, td { border: 1px solid #ddd; padding: 8px; }
+      th { background: #f2f2f2; }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; align-items: center;">
+      <h2>Hoá đơn #{{id}}</h2>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 0px; align-items: end;">
+      <p style="width: 100px; color: grey; margin: 0; line-height: 1;">Biển xe</p>
+      <p style="font-size: large; font-weight: bold; margin: 0; line-height: 1;">{{trip.bus.licensePlate}}</p>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+      <p style="width: 100px; color: grey;">Tuyến đường</p>
+      <p style="font-weight: bold; text-transform: uppercase;">{{trip.route.name}}</p>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 0px;">
+      <p style="width: 100px; color: grey;">Ghế</p>
+      <p >Hàng {{seatRow}}, cột: {{seatCol}}</p>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 0px;">
+      <p style="width: 100px; color: grey;">Giờ khởi hành</p>
+      <p >{{formattedDepartureTime}}</p>
+    </div>
+
+    <h3 style="text-align: end; margin-top: 10px; color: grey;">Giá vé: {{formattedPrice}}</h3>
+  </body>
+</html>
