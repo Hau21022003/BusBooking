@@ -54,32 +54,18 @@ export default async function TripPage({ searchParams }: TripPageProps) {
     return <div>Error</div>;
   }
 
-  const fetchBusList = async () => {
-    try {
-      return (await busApiRequest.find()).payload;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const busList = (await fetchBusList()) || [];
+  const [busListRes, routeListRes, stationsRes] = await Promise.allSettled([
+    busApiRequest.find(),
+    routeApiRequest.find(),
+    stationApiRequest.find(),
+  ]);
 
-  const fetchRouteList = async () => {
-    try {
-      return (await routeApiRequest.find()).payload;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const routes = (await fetchRouteList()) || [];
-
-  const fetchStations = async () => {
-    try {
-      return (await stationApiRequest.find()).payload;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const stations = (await fetchStations()) || [];
+  const busList =
+    busListRes.status === "fulfilled" ? busListRes.value.payload : [];
+  const routes =
+    routeListRes.status === "fulfilled" ? routeListRes.value.payload : [];
+  const stations =
+    stationsRes.status === "fulfilled" ? stationsRes.value.payload : [];
 
   return (
     <TripContainer

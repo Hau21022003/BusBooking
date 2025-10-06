@@ -9,6 +9,8 @@ import { SchedulesService } from 'src/modules/schedules/schedule.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { FindAllDto } from 'src/modules/trip/dto/find-all.dto';
 import { UpdateStatusDto } from 'src/modules/trip/dto/update-status.dto';
+import { FindAllPublicDto } from 'src/modules/trip/dto/find-all-public.dto';
+import { TripStatus } from 'src/modules/trip/enums/trip-status.enum';
 
 @Injectable()
 export class TripService {
@@ -69,6 +71,24 @@ export class TripService {
       data,
       total,
     };
+  }
+
+  async findAllPublic(dto: FindAllPublicDto) {
+    const date = new Date(dto.date);
+    const start = new Date(date.setHours(0, 0, 0, 0));
+    const end = new Date(date.setHours(23, 59, 59, 999));
+
+    const where: any = {
+      routeId: dto.routeId,
+      status: TripStatus.SCHEDULED,
+      departureTime: Between(start, end),
+      ...(dto.busType && { bus: { type: dto.busType } }),
+    };
+
+    return this.tripRepository.find({
+      where,
+      order: { departureTime: 'ASC' },
+    });
   }
 
   findOne(id: number) {

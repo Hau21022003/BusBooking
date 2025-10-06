@@ -12,6 +12,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { BookingStatus } from 'src/modules/booking/enums/booking-status.enum';
 import { Response } from 'express';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { CreateBookingPublicDto } from 'src/modules/booking/dto/create-booking-public.dto';
 
 @Controller('booking')
 export class BookingController {
@@ -25,6 +26,12 @@ export class BookingController {
   @Post()
   create(@Body() createBookingDto: CreateBookingDto) {
     return this.bookingService.create(createBookingDto);
+  }
+
+  @Public()
+  @Post('public')
+  createPublic(@Body() dto: CreateBookingPublicDto) {
+    return this.bookingService.createPublic(dto);
   }
 
   @Get(':id/confirm')

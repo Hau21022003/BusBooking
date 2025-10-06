@@ -42,7 +42,6 @@ export default function UpdateStatusDialog({
       handleErrorApi({ error });
     }
   };
-  console.log("trip", trip);
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-h-[90vh] overflow-y-auto flex flex-col space-y-2">
@@ -77,11 +76,10 @@ export default function UpdateStatusDialog({
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <p className="truncate text-gray-500">Ghế trống</p>
             <p className="truncate">
-              {trip.seats.reduce(
-                (result, seat) =>
-                  result + seat.status === SeatStatus.AVAILABLE ? 1 : 0,
-                0
-              )}{" "}
+              {trip.seats.reduce((result, seat) => {
+                if (seat.status === SeatStatus.AVAILABLE) return result + 1;
+                else return result;
+              }, 0)}{" "}
               chỗ
             </p>
           </div>
@@ -145,7 +143,7 @@ export default function UpdateStatusDialog({
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <div className="flex flex-col gap-3 sm:flex-row">
             {trip.status === TripStatus.RUNNING && (
               <button
                 onClick={() => updateTripStatus(TripStatus.COMPLETED)}

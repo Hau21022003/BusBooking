@@ -86,7 +86,7 @@ export default function TripContainer({
         >
           <div className="hidden sm:flex items-center gap-2">
             <FontAwesomeIcon icon={faBusSide} size="lg" className="w-5 h-5" />
-            <p className="tracking-wider text-xl leading-none">Chuyến đi</p>
+            <p className="tracking-wider text-xl leading-none">Chuyến xe</p>
           </div>
 
           <div className="flex items-center flex-wrap gap-2">

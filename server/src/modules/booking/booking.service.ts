@@ -11,6 +11,7 @@ import * as path from 'path';
 import * as handlebars from 'handlebars';
 import * as puppeteer from 'puppeteer';
 import { PaymentStatus } from 'src/modules/booking/enums/payment-status.enum';
+import { CreateBookingPublicDto } from 'src/modules/booking/dto/create-booking-public.dto';
 
 @Injectable()
 export class BookingService {
@@ -42,6 +43,26 @@ export class BookingService {
     return this.bookingRepository.save({
       ...createBookingDto,
       price: price,
+    });
+  }
+
+  async createPublic(dto: CreateBookingPublicDto) {
+    await this.checkSeatAvailable({
+      tripId: dto.tripId,
+      seatRow: dto.seat.row,
+      seatCol: dto.seat.col,
+    });
+    const price = await this.getSeatPrice({
+      tripId: dto.tripId,
+      seatRow: dto.seat.row,
+      seatCol: dto.seat.col,
+    });
+
+    return this.bookingRepository.save({
+      ...dto,
+      price: price,
+      paymentStatus: PaymentStatus.PENDING,
+      bookingStatus: BookingStatus.RESERVED,
     });
   }
 

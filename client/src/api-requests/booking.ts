@@ -1,5 +1,5 @@
 import http from "@/lib/http";
-import { CreateBooking } from "@/schemas/booking.schema";
+import { CreateBooking, CreateBookingPublic } from "@/schemas/booking.schema";
 import { Booking } from "@/types/booking.type";
 
 const BASE_URL = "/booking";
@@ -13,4 +13,6 @@ export const bookingApiRequest = {
   updatePaymentStatus: (id: number) => http.get(`${BASE_URL}/${id}/payment`),
   downloadInvoice: (id: number) =>
     http.get<Blob>(`${BASE_URL}/${id}/pdf`, { responseType: "blob" }),
+  createPublic: (body: CreateBookingPublic) =>
+    http.post(`${BASE_URL}/public`, body),
 };

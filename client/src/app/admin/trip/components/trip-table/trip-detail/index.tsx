@@ -41,7 +41,7 @@ export default function TripDetail({ trip }: TripDetailProps) {
   return (
     <div className="p-4 flex flex-col gap-4">
       {/* Mô hình xe */}
-      <div className="flex flex-col gap-4 2xl:flex-row">
+      <div className="flex flex-col gap-4 md:flex-row">
         <div className="w-fit p-4 pt-7 bg-gray-100 border border-gray-300 rounded-t-3xl rounded-b-lg">
           <div
             className="grid gap-2"
@@ -113,7 +113,7 @@ export default function TripDetail({ trip }: TripDetailProps) {
             )}
           </div>
         </div>
-        <div className="flex flex-row flex-wrap gap-4 items-start 2xl:flex-col">
+        <div className="flex flex-row flex-wrap gap-4 items-start md:flex-col">
           <div className="flex gap-2 items-center">
             <SeatIcon variant="selected" size={40} />
             <p className="text-black">Đã đặt vé</p>

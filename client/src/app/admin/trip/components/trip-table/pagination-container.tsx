@@ -38,9 +38,6 @@ export default function PaginationContainer() {
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
-                // href={`?${getBaseParams()}&pageNumber=${
-                //   pageMeta.pageNumber - 1
-                // }`}
                 href={
                   baseParams
                     ? `?${baseParams}&pageNumber=${pageMeta.pageNumber - 1}`
@@ -52,7 +49,6 @@ export default function PaginationContainer() {
                 }
               />
             </PaginationItem>
-            {/* Page numbers */}
             {visiblePages.map((page, index) => (
               <PaginationItem key={`${page}-${index}`}>
                 {page === "..." ? (
@@ -73,9 +69,6 @@ export default function PaginationContainer() {
             ))}
             <PaginationItem>
               <PaginationNext
-                // href={`?${getBaseParams()}&pageNumber=${
-                //   pageMeta.pageNumber + 1
-                // }`}
                 href={
                   baseParams
                     ? `?${baseParams}&pageNumber=${pageMeta.pageNumber + 1}`

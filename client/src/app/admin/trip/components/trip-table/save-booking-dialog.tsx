@@ -33,7 +33,7 @@ import { useTripStore } from "@/app/admin/trip/store";
 import { handleErrorApi } from "@/lib/error";
 import { bookingApiRequest } from "@/api-requests/booking";
 
-export type PickupLocationType = "IN_STATION" | "OTHER";
+type PickupLocationType = "IN_STATION" | "OTHER";
 
 interface SaveBookingDialogProps {
   open: boolean;
@@ -134,7 +134,7 @@ export default function SaveBookingDialog({
                     >
                       <FormControl>
                         <SelectTrigger className="w-32">
-                          <SelectValue placeholder="Chọn trạng thái thanh toán" />
+                          <SelectValue placeholder="Nơi đón khách" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>

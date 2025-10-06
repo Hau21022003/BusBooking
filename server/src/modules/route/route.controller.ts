@@ -11,6 +11,7 @@ import {
 import { RouteService } from './route.service';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('route')
 export class RouteController {
@@ -21,6 +22,7 @@ export class RouteController {
     return this.routeService.create(createRouteDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.routeService.findAll();

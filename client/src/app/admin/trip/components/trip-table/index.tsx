@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { BookingStatus } from "@/enums/booking.enum";
 import { busTypeMap } from "@/enums/bus.enum";
 import { TripStatus } from "@/enums/trip.enum";
 import { useSaveDialog } from "@/hooks/use-save-dialog";
@@ -143,7 +144,27 @@ export default function TripTable({ trips }: TripTableProps) {
                   </div>
                 </TableCell>
                 <TableCell className="py-4 text-black">
-                  <div className="flex justify-end gap-2">
+                  <div className="flex items-center justify-end gap-2">
+                    {trip.bookings?.findLast(
+                      (booking) =>
+                        booking.bookingStatus === BookingStatus.RESERVED
+                    ) && (
+                      <div
+                        title="Có người đặt vé"
+                        className="w-6 h-6 rounded-full flex items-center justify-center leading-none bg-yellow-400 text-sm font-medium"
+                      >
+                        {(() => {
+                          const reservedCount = trip.bookings.reduce(
+                            (result, booking) =>
+                              booking.bookingStatus === BookingStatus.RESERVED
+                                ? result + 1
+                                : result,
+                            0
+                          );
+                          return reservedCount > 9 ? "9+" : reservedCount;
+                        })()}
+                      </div>
+                    )}
                     <button
                       onClick={() => {
                         if (selectedTripId === trip.id) {

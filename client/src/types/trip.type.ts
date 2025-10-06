@@ -15,7 +15,7 @@ export type Trip = {
   id: number;
   routeId: string;
   busId: string;
-  departureTime: Date;
+  departureTime: string;
   status: TripStatus;
   seats: SeatTrip[];
   prices: Record<SeatType, number>;

@@ -11,6 +11,8 @@ import { TripService } from './trip.service';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { FindAllDto } from 'src/modules/trip/dto/find-all.dto';
 import { UpdateStatusDto } from 'src/modules/trip/dto/update-status.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { FindAllPublicDto } from 'src/modules/trip/dto/find-all-public.dto';
 
 @Controller('trip')
 export class TripController {
@@ -21,11 +23,18 @@ export class TripController {
     return this.tripService.findAll(dto);
   }
 
+  @Public()
+  @Post('find-all-public')
+  findAllPublic(@Body() dto: FindAllPublicDto) {
+    return this.tripService.findAllPublic(dto);
+  }
+
   @Post()
   create(@Body() createTripDto: CreateTripDto) {
     return this.tripService.create(createTripDto);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tripService.findOne(+id);

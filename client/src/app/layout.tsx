@@ -3,6 +3,9 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import LoadingOverlay from "@/components/loading-overlay";
+import "@fortawesome/fontawesome-svg-core/styles.css"; // Import the styles manually
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 
 const roboto = Roboto({ subsets: ["vietnamese"] });
 

@@ -15,5 +15,5 @@ export default async function Home() {
     }
   }
 
-  return redirect("/product-list");
+  return redirect("/home");
 }
