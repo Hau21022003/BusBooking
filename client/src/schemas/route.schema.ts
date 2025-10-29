@@ -13,6 +13,10 @@ export const createRouteSchema = z.object({
     .string("Route name is required")
     .min(1, "Route name is required")
     .max(200),
+  deliveryBasePrice: z
+    .number("Delivery base price must be a number")
+    .min(0, "Delivery base price cannot be negative")
+    .optional(),
   stops: z.array(routeStopSchema),
 });
 

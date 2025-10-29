@@ -17,9 +17,17 @@ import { TripModule } from 'src/modules/trip/trip.module';
 import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BookingModule } from 'src/modules/booking/booking.module';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { DeliveryModule } from 'src/modules/delivery/delivery.module';
+import { SettingsModule } from 'src/modules/settings/settings.module';
 
 @Module({
   imports: [
+    CacheModule.register({
+      ttl: 300 * 1000, // Thời gian sống của cache (milliseconds)
+      max: 100, // Số lượng cache tối đa
+      isGlobal: true, // Cho phép dùng cache toàn ứng dụng
+    }),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -42,6 +50,8 @@ import { BookingModule } from 'src/modules/booking/booking.module';
     TripModule,
     SchedulesModule,
     BookingModule,
+    DeliveryModule,
+    SettingsModule,
   ],
   providers: [
     {

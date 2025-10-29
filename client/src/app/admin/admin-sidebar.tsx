@@ -3,9 +3,12 @@ import { LogOut } from "lucide-react";
 import { getPathname } from "@/lib/get-current-pathname";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBoxOpen,
   faBus,
   faBusinessTime,
   faBusSide,
+  faGear,
+  faGears,
   faLocationDot,
   faRoute,
 } from "@fortawesome/free-solid-svg-icons";
@@ -47,6 +50,18 @@ const AdminSidebar = async () => {
       label: "Chuyến xe",
       url: "/admin/trip",
       active: pathname === "/admin/trip",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faBoxOpen} size="xl" className="w-6 h-6" />,
+      label: "Giao hàng",
+      url: "/admin/deliveries",
+      active: pathname === "/admin/deliveries",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faGears} size="xl" className="w-6 h-6" />,
+      label: "Cài đặt",
+      url: "/admin/settings",
+      active: pathname === "/admin/settings",
     },
   ];
 

@@ -1,5 +1,3 @@
-// import { PageMetaType } from "@/schemas/common.schema";
-
 import { PaginationMeta } from "@/types/pagination.type";
 
 export function buildPaginatedMeta({

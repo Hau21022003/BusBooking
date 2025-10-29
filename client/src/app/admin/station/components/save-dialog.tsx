@@ -24,6 +24,8 @@ import Combobox from "@/components/combobox";
 import { District, Province, Ward } from "@/types/province.type";
 import { provinceApiRequest } from "@/api-requests/province";
 import { cn } from "@/lib/utils";
+import StationPicker from "@/app/admin/station/components/station-picker";
+import { toast } from "sonner";
 
 interface SaveDialogProps {
   open: boolean;
@@ -111,7 +113,8 @@ export default function SaveDialog({
                   saveStation(data);
                 },
                 (errors) => {
-                  console.log("error", errors);
+                  const error = errors.lng || errors.lat;
+                  if (error) toast.error("Vui lòng chọn tọa độ trước khi lưu");
                 }
               )}
             >
@@ -236,6 +239,20 @@ export default function SaveDialog({
                   </FormItem>
                 )}
               />
+
+              <StationPicker
+                station={
+                  selectedStation && {
+                    lat: selectedStation.lat,
+                    lng: selectedStation.lng,
+                  }
+                }
+                onChange={(coords) => {
+                  form.setValue("lat", coords.lat);
+                  form.setValue("lng", coords.lng);
+                }}
+              />
+
               <div className="flex justify-end">
                 <button
                   type="submit"

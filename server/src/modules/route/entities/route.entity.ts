@@ -13,6 +13,9 @@ export class Route extends BaseEntity {
   @Column({ nullable: true })
   description?: string;
 
+  @Column({ default: 0 })
+  deliveryBasePrice: number;
+
   @Column({ type: 'jsonb', nullable: false })
   stops: {
     stationId?: string;

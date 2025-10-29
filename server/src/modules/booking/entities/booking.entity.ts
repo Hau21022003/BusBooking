@@ -5,6 +5,7 @@ import { Trip } from 'src/modules/trip/entities/trip.entity';
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -21,6 +22,7 @@ export class Booking extends BaseEntity {
   @Column({ nullable: true })
   pickupLocation?: string;
 
+  @Index()
   @Column()
   tripId: number;
 
@@ -44,7 +46,6 @@ export class Booking extends BaseEntity {
   })
   bookingStatus: BookingStatus;
 
-  // Lấy từ thông tin ghế và giá ghế thời điểm đặt vé
   @Column()
   price: number;
 

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 
 export type Option = {
   label: string;
@@ -62,7 +62,7 @@ export default function Combobox({
           {icon && <div className="shrink-0">{icon}</div>}
           <p
             className={cn(
-              "text-start flex-1 truncate",
+              "text-start flex-1 truncate line-clamp-1",
               type == "default" && "text-base"
             )}
           >

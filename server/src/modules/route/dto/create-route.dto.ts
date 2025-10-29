@@ -39,6 +39,10 @@ export class CreateRouteDto {
   @IsString()
   description?: string;
 
+  @IsOptional()
+  @IsNumber()
+  deliveryBasePrice: number;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => RouteStopDto)

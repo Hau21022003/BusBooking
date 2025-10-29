@@ -6,6 +6,8 @@ export const createStationSchema = z.object({
   district: z.string().min(1, "District is required"),
   ward: z.string().min(1, "Ward is required"),
   address: z.string().max(255).optional(),
+  lat: z.number("Lat is required"),
+  lng: z.number("Lng is required"),
 });
 
 export type CreateStation = z.infer<typeof createStationSchema>;

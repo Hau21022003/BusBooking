@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateStationDto {
   @IsString()
@@ -22,4 +28,10 @@ export class CreateStationDto {
   @IsOptional()
   @MaxLength(255)
   address?: string;
+
+  @IsNumber()
+  lat: number;
+
+  @IsNumber()
+  lng: number;
 }

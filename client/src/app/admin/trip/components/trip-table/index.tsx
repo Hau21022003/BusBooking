@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { BookingStatus } from "@/enums/booking.enum";
 import { busTypeMap } from "@/enums/bus.enum";
-import { TripStatus } from "@/enums/trip.enum";
+import { SeatStatus, TripStatus } from "@/enums/trip.enum";
 import { useSaveDialog } from "@/hooks/use-save-dialog";
 import { handleErrorApi } from "@/lib/error";
 import { extractTime, formatDateWithRelative } from "@/lib/time";
@@ -55,15 +55,15 @@ export default function TripTable({ trips }: TripTableProps) {
         <TableHeader>
           <TableRow className="">
             <TableHead className="font-medium text-gray-600 rounded-tl-md rounded-bl-md">
-              Xe khách
+              Tuyến, xe khách
             </TableHead>
-            <TableHead className="font-medium text-gray-600  hidden sm:table-cell">
-              Tuyến đường
+            <TableHead className="font-medium text-gray-600">
+              Ghế trống
             </TableHead>
-            <TableHead className="font-medium text-gray-600 text-right hidden sm:table-cell">
+            <TableHead className="font-medium text-gray-600 text-right">
               Giờ khởi hành
             </TableHead>
-            <TableHead className="font-medium text-gray-600 hidden sm:table-cell">
+            <TableHead className="font-medium text-gray-600">
               Trạng thái
             </TableHead>
             <TableHead className="font-medium text-gray-600 text-right rounded-tr-md rounded-br-md">
@@ -76,10 +76,14 @@ export default function TripTable({ trips }: TripTableProps) {
             <Fragment key={trip.id}>
               <TableRow className={`py-4 border-b border-gray-200`}>
                 <TableCell className="py-4 text-black">
-                  {busTypeMap[trip.bus.type]}, biển: {trip.bus.licensePlate}
+                  Tuyến: {trip.route.name}, Xe biển: {trip.bus.licensePlate}
                 </TableCell>
                 <TableCell className="py-4 text-black">
-                  {trip.route.name}
+                  {trip.seats.reduce((result, seat) => {
+                    if (seat.status === SeatStatus.AVAILABLE) return result + 1;
+                    else return result;
+                  }, 0)}{" "}
+                  chỗ
                 </TableCell>
                 <TableCell className="py-4 text-right text-black">
                   {extractTime(trip.departureTime)}

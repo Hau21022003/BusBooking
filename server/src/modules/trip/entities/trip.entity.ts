@@ -2,6 +2,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 import { Booking } from 'src/modules/booking/entities/booking.entity';
 import { Bus } from 'src/modules/bus/entities/bus.entity';
 import { SeatType } from 'src/modules/bus/enums/seat-type.enum';
+import { Delivery } from 'src/modules/delivery/entities/delivery.entity';
 import { Route } from 'src/modules/route/entities/route.entity';
 import { SeatStatus } from 'src/modules/trip/enums/seat-status.enum';
 import { TripStatus } from 'src/modules/trip/enums/trip-status.enum';
@@ -58,4 +59,7 @@ export class Trip extends BaseEntity {
 
   @OneToMany(() => Booking, (b) => b.trip)
   bookings: Booking[];
+
+  @OneToMany(() => Delivery, (d) => d.trip)
+  deliveries: Delivery[];
 }

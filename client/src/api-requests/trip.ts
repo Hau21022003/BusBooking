@@ -11,7 +11,19 @@ export const tripApiRequest = {
   delete: (tripId: number) => http.delete(`${BASE_URL}/${tripId}`),
   updateStatus: (tripId: number, status: TripStatus) =>
     http.put(`${BASE_URL}/${tripId}/update-status`, { status }),
-  findAllPublic: (body: FindAllPublic) =>
-    http.post<Trip[]>(`${BASE_URL}/find-all-public`, body),
+  findAllPublic: (body: FindAllPublic) => {
+    const params = new URLSearchParams();
+
+    if (body.busType) params.append("busType", body.busType);
+    if (body.date) params.append("date", body.date);
+    if (body.routeId) params.append("routeId", body.routeId);
+
+    const queryString = params.toString();
+    const url = `${BASE_URL}/find-all-public${
+      queryString ? `?${queryString}` : ""
+    }`;
+
+    return http.get<Trip[]>(url);
+  },
   findOne: (tripId: number) => http.get<Trip>(`${BASE_URL}/${tripId}`),
 };

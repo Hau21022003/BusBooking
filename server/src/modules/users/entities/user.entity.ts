@@ -4,6 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 export enum Role {
   ADMIN = 'ADMIN',
   STATION_STAFF = 'STATION_STAFF',
+  USER = 'USER',
 }
 
 @Entity()
@@ -27,7 +28,7 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   avatar: string;
 
-  @Column({ type: 'enum', enum: Role, default: Role.STATION_STAFF })
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
   @Column({ default: true })

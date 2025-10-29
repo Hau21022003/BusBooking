@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SeatTrip, Trip } from 'src/modules/trip/entities/trip.entity';
@@ -11,6 +11,8 @@ import { FindAllDto } from 'src/modules/trip/dto/find-all.dto';
 import { UpdateStatusDto } from 'src/modules/trip/dto/update-status.dto';
 import { FindAllPublicDto } from 'src/modules/trip/dto/find-all-public.dto';
 import { TripStatus } from 'src/modules/trip/enums/trip-status.enum';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class TripService {
@@ -21,6 +23,7 @@ export class TripService {
     private tripRepository: Repository<Trip>,
     private busService: BusService,
     private scheduleService: SchedulesService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   async create(createTripDto: CreateTripDto) {
@@ -85,10 +88,12 @@ export class TripService {
       ...(dto.busType && { bus: { type: dto.busType } }),
     };
 
-    return this.tripRepository.find({
+    const data = await this.tripRepository.find({
       where,
       order: { departureTime: 'ASC' },
     });
+
+    return data;
   }
 
   findOne(id: number) {

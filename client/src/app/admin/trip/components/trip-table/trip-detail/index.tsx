@@ -8,11 +8,15 @@ import { cn } from "@/lib/utils";
 import { SeatTrip, Trip } from "@/types/trip.type";
 import React, { useState } from "react";
 import BookingTable from "@/app/admin/trip/components/trip-table/trip-detail/booking-table";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
+import { useTripStore } from "@/app/admin/trip/store";
 
 interface TripDetailProps {
   trip: Trip;
 }
 export default function TripDetail({ trip }: TripDetailProps) {
+  const openSaveDelivery = useTripStore((s) => s.openSaveDelivery);
   const [openSaveDialog, setOpenSaveDialog] = useState(false);
   const [tripInfo, setTripInfo] = useState<{
     id: number;
@@ -40,8 +44,8 @@ export default function TripDetail({ trip }: TripDetailProps) {
 
   return (
     <div className="p-4 flex flex-col gap-4">
-      {/* Mô hình xe */}
-      <div className="flex flex-col gap-4 md:flex-row">
+      <div className="flex flex-col items-start gap-4 md:flex-row">
+        {/* Mô hình xe */}
         <div className="w-fit p-4 pt-7 bg-gray-100 border border-gray-300 rounded-t-3xl rounded-b-lg">
           <div
             className="grid gap-2"
@@ -123,7 +127,15 @@ export default function TripDetail({ trip }: TripDetailProps) {
             <p className="text-black">Đã thanh toán</p>
           </div>
         </div>
+        <div
+          onClick={() => openSaveDelivery(trip)}
+          className="flex items-center gap-2 bg-gray-300 h-10 px-4 cursor-pointer text-black font-medium text-sm rounded-md"
+        >
+          <FontAwesomeIcon icon={faTruckFast} size="lg" />
+          <p className="leading-none">Giao hàng</p>
+        </div>
       </div>
+
       <BookingTable bookings={trip.bookings} />
       {tripInfo && (
         <SaveBookingDialog

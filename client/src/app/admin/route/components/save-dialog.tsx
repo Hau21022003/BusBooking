@@ -115,237 +115,267 @@ export default function SaveDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto flex flex-col space-y-2">
+      <DialogContent className="max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>
             {selectedRoute ? "Sửa" : "Tạo mới"} tuyến đường
           </DialogTitle>
-          <Form {...form}>
-            <form
-              className="space-y-4 mt-2"
-              onSubmit={form.handleSubmit(
-                (data) => {
-                  saveRoute(data);
-                },
-                (errors) => {
-                  console.log("error", errors);
-                }
+        </DialogHeader>
+        <Form {...form}>
+          <form
+            className="h-full flex-1 flex flex-col space-y-4"
+            onSubmit={form.handleSubmit(
+              (data) => {
+                saveRoute(data);
+              },
+              (errors) => {
+                console.log("error", errors);
+              }
+            )}
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>Tên tuyến đường</FormLabel>
+                  <Input
+                    className="bg-white"
+                    placeholder="Nhập tên tuyến đường"
+                    {...field}
+                  />
+                  <FormMessage className="text-start" />
+                </FormItem>
               )}
-            >
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel>Tên tuyến đường</FormLabel>
-                    <Input
-                      className="bg-white"
-                      placeholder="Nhập tên tuyến đường"
-                      {...field}
-                    />
-                    <FormMessage className="text-start" />
-                  </FormItem>
-                )}
-              />
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  <FormLabel>Các điểm đến</FormLabel>
-                  <button
-                    onClick={addStopRoute}
-                    type="button"
-                    className="cursor-pointer"
-                  >
-                    <Plus className="w-5 h-5 text-gray-500" />
-                  </button>
-                </div>
-                {form.watch("stops").length !== 0 && (
-                  <div className="space-y-2">
-                    {form.watch("stops")?.map((s, stationIdx) => {
-                      const hasError =
-                        !!form.formState.errors.stops?.[stationIdx]?.name;
-                      return (
-                        <div
-                          key={`station_${stationIdx}`}
-                          className="flex gap-2"
+            />
+            <FormField
+              control={form.control}
+              name="deliveryBasePrice"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>Giá vận chuyển cơ bản</FormLabel>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        className="pr-10"
+                        placeholder="Vd: 30.000 đ"
+                        value={
+                          field.value
+                            ? new Intl.NumberFormat("vi-VN").format(field.value)
+                            : ""
+                        }
+                        onChange={(e) => {
+                          const raw = e.target.value.replace(/\./g, "");
+                          const numeric = parseInt(raw, 10);
+                          if (!isNaN(numeric)) {
+                            field.onChange(numeric);
+                          } else {
+                            field.onChange(0);
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <span className="absolute right-1 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center bg-gray-500 text-white text-sm rounded">
+                      đ
+                    </span>
+                  </div>
+                  <FormMessage className="text-start" />
+                </FormItem>
+              )}
+            />
+
+            <div className="space-y-3 flex-1 flex flex-col">
+              <div className="flex gap-2">
+                <FormLabel>Các điểm đến</FormLabel>
+                <button
+                  onClick={addStopRoute}
+                  type="button"
+                  className="cursor-pointer"
+                >
+                  <Plus className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+              {form.watch("stops").length !== 0 && (
+                <div className="flex-1 space-y-2 max-h-[40vh] sm:overflow-x-hidden overflow-x-scroll overflow-y-scroll">
+                  {form.watch("stops")?.map((s, stationIdx) => {
+                    const hasError =
+                      !!form.formState.errors.stops?.[stationIdx]?.name;
+                    return (
+                      <div key={`station_${stationIdx}`} className="flex gap-2">
+                        <Select
+                          onValueChange={(value) =>
+                            form.setValue(
+                              `stops.${stationIdx}.type`,
+                              value as RouteStopType
+                            )
+                          }
+                          defaultValue={form.getValues(
+                            `stops.${stationIdx}.type`
+                          )}
                         >
-                          <Select
-                            onValueChange={(value) =>
-                              form.setValue(
-                                `stops.${stationIdx}.type`,
-                                value as RouteStopType
-                              )
-                            }
-                            defaultValue={form.getValues(
-                              `stops.${stationIdx}.type`
-                            )}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="sm:w-28">
-                                <div className="flex items-center gap-2">
-                                  {form.watch(`stops.${stationIdx}.type`) ===
-                                    RouteStopType.STATION && (
-                                    <FontAwesomeIcon
-                                      size="sm"
-                                      icon={faHouse}
-                                      className="w-5 h-5"
-                                    />
-                                  )}
-                                  {form.watch(`stops.${stationIdx}.type`) ===
-                                    RouteStopType.STOP && (
-                                    <FontAwesomeIcon
-                                      size="sm"
-                                      icon={faLocation}
-                                      className="w-5 h-5"
-                                    />
-                                  )}
-                                  <SelectValue placeholder="Chọn loại" />
-                                </div>
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value={RouteStopType.STOP}>
-                                Điểm
-                              </SelectItem>
-                              <SelectItem value={RouteStopType.STATION}>
-                                Trạm
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <div className="flex-1">
-                            {form.watch(`stops.${stationIdx}.type`) ===
-                            RouteStopType.STATION ? (
-                              <Combobox
-                                options={stations.map((station) => ({
-                                  label: station.name,
-                                  value: station.id.toString(),
-                                }))}
-                                className={cn(
-                                  "w-full",
-                                  hasError &&
-                                    "border-red-500 focus:ring-red-500"
+                          <FormControl>
+                            <SelectTrigger className="sm:w-28 shrink-0">
+                              <div className="flex items-center gap-2">
+                                {form.watch(`stops.${stationIdx}.type`) ===
+                                  RouteStopType.STATION && (
+                                  <FontAwesomeIcon
+                                    size="sm"
+                                    icon={faHouse}
+                                    className="w-5 h-5"
+                                  />
                                 )}
-                                placeholder="Chọn trạm dừng"
-                                value={(
-                                  form.watch(`stops.${stationIdx}.stationId`) ||
-                                  ""
-                                ).toString()}
-                                onChange={(stationId) => {
-                                  const station = stations.findLast(
-                                    (station) =>
-                                      station.id === Number(stationId)
+                                {form.watch(`stops.${stationIdx}.type`) ===
+                                  RouteStopType.STOP && (
+                                  <FontAwesomeIcon
+                                    size="sm"
+                                    icon={faLocation}
+                                    className="w-5 h-5"
+                                  />
+                                )}
+                                <SelectValue placeholder="Chọn loại" />
+                              </div>
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={RouteStopType.STOP}>
+                              Điểm
+                            </SelectItem>
+                            <SelectItem value={RouteStopType.STATION}>
+                              Trạm
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="w-40 min-w-0 sm:w-auto sm:flex-1 shrink-0">
+                          {form.watch(`stops.${stationIdx}.type`) ===
+                          RouteStopType.STATION ? (
+                            <Combobox
+                              options={stations.map((station) => ({
+                                label: station.name,
+                                value: station.id.toString(),
+                              }))}
+                              className={cn(
+                                "w-full",
+                                hasError && "border-red-500 focus:ring-red-500"
+                              )}
+                              placeholder="Chọn trạm dừng"
+                              value={(
+                                form.watch(`stops.${stationIdx}.stationId`) ||
+                                ""
+                              ).toString()}
+                              onChange={(stationId) => {
+                                const station = stations.findLast(
+                                  (station) => station.id === Number(stationId)
+                                );
+                                if (station) {
+                                  form.setValue(
+                                    `stops.${stationIdx}.stationId`,
+                                    station.id
                                   );
-                                  if (station) {
-                                    form.setValue(
-                                      `stops.${stationIdx}.stationId`,
-                                      station.id
-                                    );
-                                    form.setValue(
-                                      `stops.${stationIdx}.name`,
-                                      station.name
-                                    );
-                                  }
-                                }}
-                              />
-                            ) : (
-                              <Input
-                                className={cn(
-                                  "bg-white text-sm",
-                                  hasError &&
-                                    "border-red-500 focus:ring-red-500"
-                                )}
-                                placeholder="Nhập tên tuyến đường"
-                                value={form.watch(`stops.${stationIdx}.name`)}
-                                onChange={(e) => {
                                   form.setValue(
                                     `stops.${stationIdx}.name`,
-                                    e.target.value
-                                  );
-                                }}
-                              />
-                            )}
-                          </div>
-                          <div
-                            className="px-2 flex items-center
-                                   border border-gray-300 rounded-md shadow"
-                          >
-                            <input
-                              type="number"
-                              value={form.watch(
-                                `stops.${stationIdx}.arrivalSeconds`
-                              )}
-                              onChange={(e) => {
-                                const value = Number(e.target.value);
-                                if (value >= 0) {
-                                  form.setValue(
-                                    `stops.${stationIdx}.arrivalSeconds`,
-                                    value
+                                    station.name
                                   );
                                 }
                               }}
-                              className="w-11 min-w-0 outline-none leading-none"
                             />
-                            <p className="p-[2px] font-medium text-white text-sm px-3 bg-gray-500 rounded-md">
-                              m
-                            </p>
-                          </div>
-                          <Popover>
-                            <PopoverTrigger>
-                              <div className="cursor-pointer overflow-hidden">
-                                <EllipsisVertical className="w-5 h-5 text-gray-500 cursor-pointer" />
-                              </div>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-40 p-0 overflow-hidden">
-                              <div>
-                                <div
-                                  onClick={() => {
-                                    setTimeout(() => {
-                                      swapStopRoute(stationIdx, "up");
-                                    }, 0);
-                                  }}
-                                  className="cursor-pointer px-4 h-9 flex items-center leading-none hover:bg-gray-50"
-                                >
-                                  Lên trên
-                                </div>
-                                <div
-                                  onClick={() => {
-                                    setTimeout(() => {
-                                      swapStopRoute(stationIdx, "down");
-                                    }, 0);
-                                  }}
-                                  className="cursor-pointer px-4 h-9 flex items-center leading-none hover:bg-gray-50"
-                                >
-                                  Xuống dưới
-                                </div>
-                                <div
-                                  onClick={() => {
-                                    setTimeout(() => {
-                                      deleteStopRoute(stationIdx);
-                                    }, 0);
-                                  }}
-                                  className="cursor-pointer px-4 h-9 flex items-center leading-none hover:bg-gray-50"
-                                >
-                                  Xóa
-                                </div>
-                              </div>
-                            </PopoverContent>
-                          </Popover>
+                          ) : (
+                            <Input
+                              className={cn(
+                                "bg-white text-sm",
+                                hasError && "border-red-500 focus:ring-red-500"
+                              )}
+                              placeholder="Nhập tên tuyến đường"
+                              value={form.watch(`stops.${stationIdx}.name`)}
+                              onChange={(e) => {
+                                form.setValue(
+                                  `stops.${stationIdx}.name`,
+                                  e.target.value
+                                );
+                              }}
+                            />
+                          )}
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="cursor-pointer leading-none w-full sm:w-fit py-3 px-4 bg-black rounded-md text-white font-medium text-sm"
-                >
-                  Lưu
-                </button>
-              </div>
-            </form>
-          </Form>
-        </DialogHeader>
+                        <div
+                          className="shrink-0 px-2 flex items-center
+                                   border border-gray-300 rounded-md shadow"
+                        >
+                          <input
+                            type="number"
+                            value={form.watch(
+                              `stops.${stationIdx}.arrivalSeconds`
+                            )}
+                            onChange={(e) => {
+                              const value = Number(e.target.value);
+                              if (value >= 0) {
+                                form.setValue(
+                                  `stops.${stationIdx}.arrivalSeconds`,
+                                  value
+                                );
+                              }
+                            }}
+                            className="w-11 min-w-0 outline-none leading-none"
+                          />
+                          <p className="p-[2px] font-medium text-white text-sm px-3 bg-gray-500 rounded-md">
+                            m
+                          </p>
+                        </div>
+                        <Popover>
+                          <PopoverTrigger>
+                            <div className="shrink-0 cursor-pointer overflow-hidden">
+                              <EllipsisVertical className="w-5 h-5 text-gray-500 cursor-pointer" />
+                            </div>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-40 p-0 overflow-hidden">
+                            <div>
+                              <div
+                                onClick={() => {
+                                  setTimeout(() => {
+                                    swapStopRoute(stationIdx, "up");
+                                  }, 0);
+                                }}
+                                className="cursor-pointer px-4 h-9 flex items-center leading-none hover:bg-gray-50"
+                              >
+                                Lên trên
+                              </div>
+                              <div
+                                onClick={() => {
+                                  setTimeout(() => {
+                                    swapStopRoute(stationIdx, "down");
+                                  }, 0);
+                                }}
+                                className="cursor-pointer px-4 h-9 flex items-center leading-none hover:bg-gray-50"
+                              >
+                                Xuống dưới
+                              </div>
+                              <div
+                                onClick={() => {
+                                  setTimeout(() => {
+                                    deleteStopRoute(stationIdx);
+                                  }, 0);
+                                }}
+                                className="cursor-pointer px-4 h-9 flex items-center leading-none hover:bg-gray-50"
+                              >
+                                Xóa
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="cursor-pointer leading-none w-full sm:w-fit py-3 px-4 bg-black rounded-md text-white font-medium text-sm"
+              >
+                Lưu
+              </button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
