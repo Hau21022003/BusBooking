@@ -1,4 +1,5 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { Route } from 'src/modules/route/entities/route.entity';
 import { Station } from 'src/modules/station/entities/station.entity';
 import { Trip } from 'src/modules/trip/entities/trip.entity';
 import {
@@ -35,11 +36,14 @@ export class Delivery extends BaseEntity {
   @Column()
   receiverPhone: string;
 
-  // @Column()
-  // pickupLocation: string;
+  @Column({ nullable: true })
+  @Index()
+  routeId?: string;
 
-  // @Column()
-  // dropoffLocation: string;
+  @ManyToOne(() => Route, { eager: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'routeId' })
+  route?: Route;
+
   @ManyToOne(() => Station, { eager: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'pickupStationId' })
   pickupStation: Station;

@@ -1,3 +1,5 @@
+import { deliveryApiRequest } from "@/api-requests/delivery";
+import { routeApiRequest } from "@/api-requests/route-api";
 import { useTripStore } from "@/app/admin/trip/store";
 import Combobox from "@/components/combobox";
 import {
@@ -21,12 +23,14 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { DeliveryStatus, deliveryStatusLabels } from "@/enums/delivery.enum";
+import { handleErrorApi } from "@/lib/error";
 import { extractTime, formatDateWithRelative } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import {
   CreateDeliveryInput,
   createDeliverySchema,
 } from "@/schemas/delivery.schema";
+import { Route } from "@/types/route.type";
 import { Station } from "@/types/station.type";
 import {
   faBusSide,
@@ -43,8 +47,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 
 interface SaveDeliveryProps {
   stations: Station[];
@@ -68,6 +74,7 @@ const getStatusIcon = (status: DeliveryStatus) => {
 };
 
 export default function SaveDelivery({ stations }: SaveDeliveryProps) {
+  const router = useRouter();
   const [price, setPrice] = useState<number>();
   const form = useForm({
     resolver: zodResolver(createDeliverySchema),
@@ -82,7 +89,10 @@ export default function SaveDelivery({ stations }: SaveDeliveryProps) {
 
   useEffect(() => {
     if (selectedDelivery) form.reset(selectedDelivery);
-    if (selectedTrip) form.setValue("tripId", selectedTrip.id);
+    if (selectedTrip) {
+      form.setValue("tripId", selectedTrip.id);
+      form.setValue("routeId", selectedTrip.routeId);
+    }
   }, [selectedTrip, selectedDelivery]);
 
   const weight = useWatch({
@@ -90,16 +100,42 @@ export default function SaveDelivery({ stations }: SaveDeliveryProps) {
     name: "weight",
   });
 
+  const tripId = useWatch({
+    control: form.control,
+    name: "tripId",
+  });
+
   useEffect(() => {
-    if (weight) {
-      
-    } else {
-      setPrice(undefined);
-    }
+    const load = async () => {
+      if (weight && tripId) {
+        try {
+          const priceRes = await deliveryApiRequest.calculatePrice({
+            tripId: tripId,
+            weight: weight,
+          });
+          setPrice(priceRes.payload.price);
+        } catch (error) {
+          console.log("error", error);
+        }
+      } else {
+        setPrice(undefined);
+      }
+    };
+    load();
   }, [weight]);
 
-  const saveDelivery = (data: CreateDeliveryInput) => {
-    console.log("data", data);
+  const saveDelivery = async (data: CreateDeliveryInput) => {
+    try {
+      if (selectedDelivery) {
+        await deliveryApiRequest.update(selectedDelivery.id, data);
+      } else {
+        await deliveryApiRequest.create(data);
+      }
+      closeSaveDelivery();
+      router.refresh();
+    } catch (error) {
+      handleErrorApi({ error });
+    }
   };
 
   return (
@@ -364,6 +400,9 @@ export default function SaveDelivery({ stations }: SaveDeliveryProps) {
                           )}
                           placeholder="Tên người gửi"
                           {...field}
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
                         />
                         <div
                           className={cn(

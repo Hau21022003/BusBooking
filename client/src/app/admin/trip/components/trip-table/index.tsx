@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { BookingStatus } from "@/enums/booking.enum";
-import { busTypeMap } from "@/enums/bus.enum";
 import { SeatStatus, TripStatus } from "@/enums/trip.enum";
 import { useSaveDialog } from "@/hooks/use-save-dialog";
 import { handleErrorApi } from "@/lib/error";

@@ -30,7 +30,7 @@ export class RouteController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.routeService.findOne(+id);
+    return this.routeService.findOne(id);
   }
 
   @Put(':id')

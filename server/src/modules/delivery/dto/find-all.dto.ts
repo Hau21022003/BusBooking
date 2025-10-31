@@ -4,11 +4,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 export class FindAllDto extends PaginationDto {
   @IsOptional()
   @IsString()
-  phone: string;
-
-  @IsOptional()
-  @IsString()
-  name: string;
+  search?: string;
 
   @IsOptional()
   @IsDateString()

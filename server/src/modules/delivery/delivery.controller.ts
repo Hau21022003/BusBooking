@@ -12,6 +12,7 @@ import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { FindAllDto } from 'src/modules/delivery/dto/find-all.dto';
+import { CalculatePriceDto } from 'src/modules/delivery/dto/calculate-price.dto';
 
 @Controller('delivery')
 export class DeliveryController {
@@ -28,6 +29,13 @@ export class DeliveryController {
   @Post('find-all')
   findAll(@Body() dto: FindAllDto) {
     return this.deliveryService.findAll(dto);
+  }
+
+  @Post('calculate-price')
+  async calculatePrice(@Body() calculatePriceDto: CalculatePriceDto) {
+    return {
+      price: await this.deliveryService.calculatePrice(calculatePriceDto),
+    };
   }
 
   @Get(':id')

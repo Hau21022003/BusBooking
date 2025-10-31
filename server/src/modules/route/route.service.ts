@@ -20,8 +20,8 @@ export class RouteService {
     return this.routeRepository.find({ order: { createdAt: 'DESC' } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} route`;
+  findOne(id: string) {
+    return this.routeRepository.findOneByOrFail({ id });
   }
 
   update(id: string, updateRouteDto: UpdateRouteDto) {

@@ -1,4 +1,4 @@
-import { DeliveryStatus, PaymentStatus } from "@/enums/delivery.enum";
+import { DeliveryStatus } from "@/enums/delivery.enum";
 import z from "zod";
 
 export const createDeliverySchema = z.object({
@@ -14,15 +14,11 @@ export const createDeliverySchema = z.object({
   receiverPhone: z
     .string("receiverPhone is required")
     .min(1, "receiverPhone is required"),
-  // pickupLocation: z
-  //   .string("pickupLocation is required")
-  //   .min(1, "pickupLocation is required"),
-  // dropoffLocation: z
-  //   .string("dropoffLocation is required")
-  //   .min(1, "dropoffLocation is required"),
 
   pickupStationId: z.number("pickupLocation is required"),
   dropoffStationId: z.number("dropoffLocation is required"),
+
+  routeId: z.string(),
 
   weight: z
     .number("weight is required")
@@ -35,3 +31,10 @@ export const createDeliverySchema = z.object({
 });
 
 export type CreateDeliveryInput = z.infer<typeof createDeliverySchema>;
+
+export const FindAllSchema = z.object({
+  startDate: z.string().datetime().optional(),
+  endDate: z.string().datetime().optional(),
+  search: z.string().optional(),
+});
+export type FindAllInput = z.infer<typeof FindAllSchema>;

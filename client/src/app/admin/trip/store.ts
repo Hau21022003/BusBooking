@@ -14,7 +14,10 @@ type TripStore = {
   isSaveDeliveryOpen: boolean;
   selectedDelivery?: Delivery;
   selectedTrip?: Trip;
-  openSaveDelivery: (trip: Trip, selectedDelivery?: Delivery) => void;
+  openSaveDelivery: (params: {
+    trip?: Trip;
+    selectedDelivery?: Delivery;
+  }) => void;
   closeSaveDelivery: () => void;
 };
 
@@ -27,7 +30,7 @@ export const useTripStore = create<TripStore>()((set, get) => ({
 
   isSaveDeliveryOpen: false,
   selectedTripId: undefined,
-  openSaveDelivery: (trip, selectedDelivery) =>
+  openSaveDelivery: ({ trip, selectedDelivery }) =>
     set({
       isSaveDeliveryOpen: true,
       selectedTrip: trip,

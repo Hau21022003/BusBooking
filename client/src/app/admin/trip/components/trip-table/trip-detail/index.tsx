@@ -3,7 +3,7 @@ import SeatIcon, { SeatVariant } from "@/components/icon/seat-icon";
 import SteeringWheelIcon from "@/components/icon/steering-wheel-icon";
 import { PaymentStatus } from "@/enums/booking.enum";
 import { SeatType } from "@/enums/bus.enum";
-import { SeatStatus } from "@/enums/trip.enum";
+import { SeatStatus, TripStatus } from "@/enums/trip.enum";
 import { cn } from "@/lib/utils";
 import { SeatTrip, Trip } from "@/types/trip.type";
 import React, { useState } from "react";
@@ -11,6 +11,7 @@ import BookingTable from "@/app/admin/trip/components/trip-table/trip-detail/boo
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import { useTripStore } from "@/app/admin/trip/store";
+import DeliveryTable from "@/app/admin/trip/components/trip-table/trip-detail/delivery-table";
 
 interface TripDetailProps {
   trip: Trip;
@@ -23,7 +24,10 @@ export default function TripDetail({ trip }: TripDetailProps) {
     seatTrip: SeatTrip;
   }>();
   const handleOpenDialog = (seat: SeatTrip) => {
-    if (seat.status === SeatStatus.BOOKED) {
+    if (
+      seat.status === SeatStatus.BOOKED ||
+      trip.status !== TripStatus.SCHEDULED
+    ) {
       return;
     }
     setOpenSaveDialog(true);
@@ -127,16 +131,19 @@ export default function TripDetail({ trip }: TripDetailProps) {
             <p className="text-black">Đã thanh toán</p>
           </div>
         </div>
-        <div
-          onClick={() => openSaveDelivery(trip)}
-          className="flex items-center gap-2 bg-gray-300 h-10 px-4 cursor-pointer text-black font-medium text-sm rounded-md"
-        >
-          <FontAwesomeIcon icon={faTruckFast} size="lg" />
-          <p className="leading-none">Giao hàng</p>
-        </div>
+        {trip.status === TripStatus.SCHEDULED && (
+          <div
+            onClick={() => openSaveDelivery({ trip })}
+            className="flex items-center gap-2 bg-gray-300 h-10 px-4 cursor-pointer text-black font-medium text-sm rounded-md"
+          >
+            <FontAwesomeIcon icon={faTruckFast} size="lg" />
+            <p className="leading-none">Giao hàng</p>
+          </div>
+        )}
       </div>
 
       <BookingTable bookings={trip.bookings} />
+      <DeliveryTable deliveries={trip.deliveries} trip={trip} />
       {tripInfo && (
         <SaveBookingDialog
           onClose={handleCloseDialog}

@@ -13,3 +13,4 @@ export const deliveryStatusLabels: Record<DeliveryStatus, string> = {
   [DeliveryStatus.CANCELLED]: "Đã hủy",
   [DeliveryStatus.RETURNED]: "Hoàn hàng",
 };
+

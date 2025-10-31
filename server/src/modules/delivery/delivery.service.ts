@@ -5,17 +5,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Delivery } from 'src/modules/delivery/entities/delivery.entity';
 import { Repository } from 'typeorm';
 import { FindAllDto } from 'src/modules/delivery/dto/find-all.dto';
+import { TripService } from 'src/modules/trip/trip.service';
+import { SettingsService } from 'src/modules/settings/settings.service';
+import { SettingKey } from 'src/modules/settings/enum/setting-key.enum';
+import { CalculatePriceDto } from 'src/modules/delivery/dto/calculate-price.dto';
 
 @Injectable()
 export class DeliveryService {
   constructor(
     @InjectRepository(Delivery)
     private deliveryRepository: Repository<Delivery>,
+    private tripService: TripService,
+    private settingsService: SettingsService,
   ) {}
 
-  create(createDeliveryDto: CreateDeliveryDto, userId: string) {
+  async create(createDeliveryDto: CreateDeliveryDto, userId: string) {
+    const price = await this.calculatePrice({
+      tripId: createDeliveryDto.tripId,
+      weight: createDeliveryDto.weight,
+    });
     return this.deliveryRepository.save({
       ...createDeliveryDto,
+      price: price,
       createdBy: { id: userId },
     });
   }
@@ -39,14 +50,41 @@ export class DeliveryService {
     return `This action returns a #${id} delivery`;
   }
 
-  update(id: number, updateDeliveryDto: UpdateDeliveryDto, userId: string) {
-    return this.deliveryRepository.update(id, {
-      ...updateDeliveryDto,
-      updatedBy: { id: userId },
-    });
+  async update(
+    id: number,
+    updateDeliveryDto: UpdateDeliveryDto,
+    userId: string,
+  ) {
+    const data: any = { ...updateDeliveryDto, updatedBy: { id: userId } };
+    if (updateDeliveryDto.weight && updateDeliveryDto.tripId) {
+      const price = await this.calculatePrice({
+        tripId: updateDeliveryDto.tripId,
+        weight: updateDeliveryDto.weight,
+      });
+      data.price = price;
+    }
+
+    return this.deliveryRepository.update(id, data);
   }
 
   remove(id: number) {
     return this.deliveryRepository.delete(id);
+  }
+
+  async calculatePrice(calculatePriceDto: CalculatePriceDto) {
+    const trip = await this.tripService.findOne(calculatePriceDto.tripId);
+    const basePrice = trip?.route?.deliveryBasePrice || 0;
+    let shippingRatePerKg = 0;
+
+    try {
+      const rate = await this.settingsService.get(
+        SettingKey.SHIPPING_RATE_PER_KG,
+      );
+      shippingRatePerKg = Number(rate) || 0;
+    } catch {}
+
+    const total = basePrice + shippingRatePerKg * calculatePriceDto.weight;
+
+    return Math.ceil(total);
   }
 }

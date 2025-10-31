@@ -65,7 +65,7 @@ export class TripService {
     const [data, total] = await this.tripRepository.findAndCount({
       where,
       order: { departureTime: 'DESC' },
-      relations: ['bookings'],
+      relations: ['bookings', 'deliveries'],
       skip: findAllDto.offset,
       take: findAllDto.pageSize,
     });

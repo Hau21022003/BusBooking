@@ -7,6 +7,7 @@ import {
 } from 'class-validator';
 import { IsExists } from 'src/common/decorators/is-exists.decorator';
 import { DeliveryStatus } from 'src/modules/delivery/entities/delivery.entity';
+import { Route } from 'src/modules/route/entities/route.entity';
 import { Station } from 'src/modules/station/entities/station.entity';
 import { Trip } from 'src/modules/trip/entities/trip.entity';
 
@@ -27,13 +28,9 @@ export class CreateDeliveryDto {
   @IsNotEmpty()
   receiverPhone: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // pickupLocation: string;
-
-  // @IsString()
-  // @IsNotEmpty()
-  // dropoffLocation: string;
+  @IsString()
+  @IsExists(Route)
+  routeId: string;
 
   @IsNumber()
   @IsExists(Station)

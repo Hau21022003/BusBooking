@@ -2,6 +2,7 @@ import { SeatType } from "@/enums/bus.enum";
 import { SeatStatus, TripStatus } from "@/enums/trip.enum";
 import { Booking } from "@/types/booking.type";
 import { Bus } from "@/types/bus.type";
+import { Delivery } from "@/types/delivery.type";
 import { Route } from "@/types/route.type";
 
 export type SeatTrip = {
@@ -22,6 +23,7 @@ export type Trip = {
   bus: Bus;
   route: Route;
   bookings?: Booking[];
+  deliveries?: Delivery[];
 };
 
 export type TripSearchParams = {

@@ -10,6 +10,7 @@ export const routeApiRequest = {
       cache: "force-cache",
       next: { tags: ["route"] },
     }),
+  findOne: (id: string) => http.get<Route>(`${BASE_URL}/${id}`),
   create: async (body: CreateRoute) => {
     const res = await http.post<Route>(BASE_URL, body);
     await revalidateApiRequest("route");
