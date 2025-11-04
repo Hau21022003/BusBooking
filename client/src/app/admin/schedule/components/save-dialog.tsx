@@ -20,7 +20,7 @@ import {
   CreateSchedule,
   createScheduleSchema,
 } from "@/schemas/schedule.schema";
-import { BusType, SeatType } from "@/enums/bus.enum";
+import { SeatType } from "@/enums/bus.enum";
 import { Bus } from "@/types/bus.type";
 import { Route } from "@/types/route.type";
 import Combobox from "@/components/combobox";
@@ -29,6 +29,7 @@ import { Plus, X } from "lucide-react";
 import { handleErrorApi } from "@/lib/error";
 import { useRouter } from "next/navigation";
 import { scheduleApiRequest } from "@/api-requests/schedule";
+import { seatTypeLabels } from "@/enums/bus-model.enum";
 
 interface SaveDialogProps {
   open: boolean;
@@ -73,20 +74,13 @@ export default function SaveDialog({
     }
   }, [selectedSchedule]);
 
-  const busTypeMap: Record<BusType, string> = {
-    SEAT_16: "Xe 16 chỗ",
-    LIMOUSINE_9: "Xe Limousine 9 chỗ",
-    SEAT_29: "Xe 29 chỗ",
-    SLEEPER_34: "Xe giường nằm 34 chỗ",
-  };
-
-  const seatTypeMap: Record<SeatType, string> = {
-    [SeatType.FRONT]: "Ghế đầu",
-    [SeatType.MIDDLE]: "Ghế giữa",
-    [SeatType.BACK]: "Ghế sau",
-    [SeatType.STANDARD]: "Ghế thường",
-    [SeatType.VIP]: "Ghế vip",
-  };
+  // const seatTypeMap: Record<SeatType, string> = {
+  //   [SeatType.FRONT]: "Ghế đầu",
+  //   [SeatType.MIDDLE]: "Ghế giữa",
+  //   [SeatType.BACK]: "Ghế sau",
+  //   [SeatType.STANDARD]: "Ghế thường",
+  //   [SeatType.VIP]: "Ghế vip",
+  // };
 
   const setDefaultPrices = (bus: Bus) => {
     const seatTypes = bus.seatLayout.seats.reduce((result, seat) => {
@@ -134,9 +128,7 @@ export default function SaveDialog({
                     <FormLabel>Xe khách</FormLabel>
                     <Combobox
                       options={busList.map((bus) => ({
-                        label: `${busTypeMap[bus.type]}, biển: ${
-                          bus.licensePlate
-                        }`,
+                        label: `${bus.busModel?.name}, biển: ${bus.licensePlate}`,
                         value: bus.id,
                       }))}
                       className={cn(
@@ -238,7 +230,7 @@ export default function SaveDialog({
                           >
                             <div className="ml-3 flex items-center">
                               <p className="text-sm truncate">
-                                {seatTypeMap[seatType as SeatType]}:
+                                {seatTypeLabels[seatType as SeatType]}:
                               </p>
                             </div>
                             <div className="flex-1 py-[6px]">

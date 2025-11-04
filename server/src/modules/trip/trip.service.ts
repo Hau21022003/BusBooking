@@ -85,7 +85,7 @@ export class TripService {
       routeId: dto.routeId,
       status: TripStatus.SCHEDULED,
       departureTime: Between(start, end),
-      ...(dto.busType && { bus: { type: dto.busType } }),
+      ...(dto.busModelId && { bus: { busModelId: dto.busModelId } }),
     };
 
     const data = await this.tripRepository.find({

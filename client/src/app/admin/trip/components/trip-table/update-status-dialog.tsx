@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { busTypeMap } from "@/enums/bus.enum";
 import { SeatStatus, TripStatus } from "@/enums/trip.enum";
 import { handleErrorApi } from "@/lib/error";
 import { cn } from "@/lib/utils";
@@ -56,7 +55,7 @@ export default function UpdateStatusDialog({
           <div className="grid grid-cols-[100px_1fr] gap-4">
             <p className="truncate text-gray-500">Xe</p>
             <p className="truncate">
-              {busTypeMap[trip.bus.type]}, biển: {trip.bus.licensePlate}
+              {trip.bus.busModel?.name}, biển: {trip.bus.licensePlate}
             </p>
           </div>
           <div className="grid grid-cols-[100px_1fr] gap-4">

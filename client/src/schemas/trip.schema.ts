@@ -1,4 +1,3 @@
-import { BusType } from "@/enums/bus.enum";
 import { PaginationSchema } from "@/schemas/pagination.schema";
 import z from "zod";
 
@@ -13,6 +12,6 @@ export type FindAll = z.infer<typeof findAllSchema>;
 export const findAllPublicSchema = z.object({
   routeId: z.string(),
   date: z.string().datetime(),
-  busType: z.enum(BusType).optional(),
+  busModelId: z.number().optional(),
 });
 export type FindAllPublic = z.infer<typeof findAllPublicSchema>;

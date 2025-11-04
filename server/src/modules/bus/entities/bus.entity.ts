@@ -1,11 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { BusType } from 'src/modules/bus/enums/bus-type.enum';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { SeatType } from 'src/modules/bus/enums/seat-type.enum';
+import { BusModel } from 'src/modules/bus-model/entities/bus-model.entity';
 
 export class Seat {
   row: number;
   col: number;
-  status: 'available' | 'hidden' | 'reserved';
   type: SeatType;
 }
 
@@ -20,18 +25,19 @@ export class Bus {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    type: 'enum',
-    enum: BusType,
-  })
-  type: BusType;
-
   @Column({ type: 'jsonb', nullable: true })
   seatLayout: SeatLayout;
 
   @Column({ unique: true })
   licensePlate: string;
 
-  @Column({ nullable: false })
-  imageUrl: string;
+  @Column({ nullable: true })
+  imageUrl?: string;
+
+  @Column({ nullable: true })
+  busModelId?: number;
+
+  @ManyToOne(() => BusModel, { eager: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'busModelId' })
+  busModel?: BusModel;
 }

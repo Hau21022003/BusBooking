@@ -32,7 +32,7 @@ export class BusController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateBusDto: UpdateBusDto) {
+  update(@Param('id') id: string, @Body() updateBusDto: CreateBusDto) {
     return this.busService.update(id, updateBusDto);
   }
 

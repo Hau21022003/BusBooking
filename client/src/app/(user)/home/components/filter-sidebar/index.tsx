@@ -5,13 +5,19 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { BusType, busTypeMap } from "@/enums/bus.enum";
 import { cn } from "@/lib/utils";
+import { BusModel } from "@/types/bus-model.type";
 import { X } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-export default function FilterSidebar({ params }: { params: HomePageParams }) {
+export default function FilterSidebar({
+  params,
+  busModels,
+}: {
+  params: HomePageParams;
+  busModels: BusModel[];
+}) {
   const getBaseParams = (...excludes: (keyof HomePageParams)[]) => {
     const query = new URLSearchParams();
 
@@ -55,20 +61,20 @@ export default function FilterSidebar({ params }: { params: HomePageParams }) {
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="flex flex-col gap-1 mt-4">
-          {Object.entries(BusType).map(([key, value]) => {
-            const checked = params.busType === value;
-            const baseParams = getBaseParams("busType");
+          {busModels.map((busModel) => {
+            const checked = params.busModelId === busModel.id;
+            const baseParams = getBaseParams("busModelId");
             const newParams = checked
               ? baseParams
-              : `${baseParams}&busType=${value}`;
+              : `${baseParams}&busModelId=${busModel.id}`;
             return (
-              <Link key={key} href={`?${newParams}`}>
+              <Link key={busModel.id} href={`?${newParams}`}>
                 <div
                   className={`px-4 py-[4px] flex items-center justify-between cursor-pointer ${
                     checked ? "bg-gray-200" : "hover:bg-gray-200"
                   }`}
                 >
-                  <span className="truncate">{busTypeMap[value]}</span>
+                  <span className="truncate">{busModel.name}</span>
                   <button className={`${checked ? "" : "hidden"}`}>
                     <X className="w-4 h-4" />
                   </button>

@@ -18,7 +18,6 @@ import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import Combobox from "@/components/combobox";
-import { BusType } from "@/enums/bus.enum";
 import { Bus } from "@/types/bus.type";
 import { Route } from "@/types/route.type";
 
@@ -48,13 +47,6 @@ export default function SearchContainer({
     });
 
     return query.toString();
-  };
-
-  const busTypeMap: Record<BusType, string> = {
-    SEAT_16: "Xe 16 chỗ",
-    LIMOUSINE_9: "Xe Limousine 9 chỗ",
-    SEAT_29: "Xe 29 chỗ",
-    SLEEPER_34: "Xe giường nằm 34 chỗ",
   };
 
   return (
@@ -138,7 +130,7 @@ export default function SearchContainer({
           <p className="text-sm leading-none">Xe khách</p>
           <Combobox
             options={busList.map((bus) => ({
-              label: `${bus.licensePlate}, ${busTypeMap[bus.type]}`,
+              label: `${bus.licensePlate}, ${bus.busModel?.name}`,
               value: bus.id,
             }))}
             className="w-full"

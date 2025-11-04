@@ -11,7 +11,7 @@ export default async function Home() {
     const decoded = jwt.decode(accessToken) as JwtPayload | null;
 
     if (decoded?.role === "ADMIN") {
-      return redirect("/admin/bus-list");
+      return redirect("/admin/bus/list");
     }
   }
 

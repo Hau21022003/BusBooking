@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
-import { BusType } from "@/enums/bus.enum";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { handleErrorApi } from "@/lib/error";
@@ -25,12 +24,6 @@ export default function ScheduleTable({
   schedules,
 }: ScheduleTableProps) {
   const router = useRouter();
-  const busTypeMap: Record<BusType, string> = {
-    SEAT_16: "Xe 16 chỗ",
-    LIMOUSINE_9: "Xe Limousine 9 chỗ",
-    SEAT_29: "Xe 29 chỗ",
-    SLEEPER_34: "Xe giường nằm 34 chỗ",
-  };
 
   const deleteSchedule = async (scheduleId: number) => {
     try {
@@ -79,9 +72,7 @@ export default function ScheduleTable({
               className={`py-4 border-b border-gray-200 w-60 truncate`}
             >
               <TableCell className="py-4 pl-4 text-black max-w-60 truncate">
-                {`${busTypeMap[schedule.bus.type]}, biển: ${
-                  schedule.bus.licensePlate
-                }`}
+                {`${schedule.bus.busModel?.name}, biển: ${schedule.bus.licensePlate}`}
               </TableCell>
               <TableCell className="py-4 text-black max-w-40 truncate">
                 {schedule.route.name}

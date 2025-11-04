@@ -17,9 +17,10 @@ import { TripModule } from 'src/modules/trip/trip.module';
 import { SchedulesModule } from 'src/modules/schedules/schedules.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BookingModule } from 'src/modules/booking/booking.module';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { CacheModule } from '@nestjs/cache-manager';
 import { DeliveryModule } from 'src/modules/delivery/delivery.module';
 import { SettingsModule } from 'src/modules/settings/settings.module';
+import { BusModelModule } from 'src/modules/bus-model/bus-model.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { SettingsModule } from 'src/modules/settings/settings.module';
     BookingModule,
     DeliveryModule,
     SettingsModule,
+    BusModelModule,
   ],
   providers: [
     {

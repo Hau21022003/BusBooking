@@ -1,7 +1,6 @@
 "use client";
 
 import { useHomeStore } from "@/app/(user)/home/store";
-import { busTypeMap } from "@/enums/bus.enum";
 import { SeatStatus } from "@/enums/trip.enum";
 import { Trip } from "@/types/trip.type";
 import Image from "next/image";
@@ -39,7 +38,7 @@ export default function TripGrid({ trips }: TripGridProps) {
           >
             <Image
               alt={trip.bus.licensePlate}
-              src={trip.bus.imageUrl || ""}
+              src={trip.bus.busModel?.imageUrl || ""}
               width={50}
               height={50}
               quality={100}
@@ -47,7 +46,7 @@ export default function TripGrid({ trips }: TripGridProps) {
             />
             <div className="space-y-3 flex-1">
               <p className="leading-none truncate">
-                {busTypeMap[trip.bus.type]}
+                {trip.bus.busModel?.name}
               </p>
               <p className="text-lg font-bold leading-none">
                 {(() => {

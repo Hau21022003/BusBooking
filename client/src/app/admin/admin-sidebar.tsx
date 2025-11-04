@@ -20,8 +20,8 @@ const AdminSidebar = async () => {
     {
       icon: <FontAwesomeIcon icon={faBus} size="xl" className="w-6 h-6" />,
       label: "Xe Khách",
-      url: "/admin/bus-list",
-      active: pathname === "/admin/bus-list" || pathname === "/admin/save-bus",
+      url: "/admin/bus/list",
+      active: pathname.includes("/admin/bus"),
     },
     {
       icon: (

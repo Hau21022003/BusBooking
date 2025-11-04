@@ -1,46 +1,55 @@
+import { busModelApiRequest } from "@/api-requests/bus-model";
 import { routeApiRequest } from "@/api-requests/route-api";
 import { tripApiRequest } from "@/api-requests/trip";
 import FilterSidebar from "@/app/(user)/home/components/filter-sidebar";
 import SearchContainer from "@/app/(user)/home/components/search-container";
 import TripGrid from "@/app/(user)/home/components/trip-grid";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { BusType } from "@/enums/bus.enum";
 import { faSliders } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { z } from "zod";
 
 const HomePageParamsSchema = z.object({
-  busType: z.enum(BusType).optional(),
   date: z.string().datetime().optional(),
   routeId: z.string().optional(),
+  busModelId: z.number().optional(),
 });
 
 export type HomePageParams = {
-  busType?: BusType;
   date?: string;
   routeId?: string;
+  busModelId?: number;
 };
 interface HomePageProps {
   searchParams: HomePageParams;
 }
 export default async function HomePage({ searchParams }: HomePageProps) {
-  const { busType, date, routeId } = await searchParams;
+  const { date, routeId, busModelId } = await searchParams;
 
   const rawParams: HomePageParams = {
-    busType,
     date,
+    routeId,
+    busModelId: busModelId ? Number(busModelId) : undefined,
   };
   const params = HomePageParamsSchema.safeParse(rawParams);
   if (!params.success) {
     console.error("Invalid query params");
   }
 
+  const busModels = await busModelApiRequest
+    .findAll()
+    .then((res) => res.payload)
+    .catch((e) => {
+      console.log("busModelApiRequest: ", e);
+      return [];
+    });
+
   const trips = await tripApiRequest
     .findAllPublic({
       date: date ?? new Date().toISOString(),
       routeId: routeId || "",
-      busType: busType,
+      busModelId: busModelId && Number(busModelId),
     })
     .then((res) => res.payload)
     .catch((err) => {
@@ -62,9 +71,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <SearchContainer routes={routes} />
       </div>
       {date && routeId && (
-        <div className="flex flex-col gap-6 lg:flex-row lg:gap-10">
+        <div className="flex flex-col items-start gap-6 lg:flex-row lg:gap-10">
           <div className="hidden lg:block bg-white rounded-lg p-6 border border-gray-200">
-            <FilterSidebar params={params.data || {}} />
+            <FilterSidebar params={params.data || {}} busModels={busModels} />
           </div>
 
           <div className="lg:hidden flex justify-between items-center">
@@ -79,7 +88,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 </button>
               </SheetTrigger>
               <SheetContent side="left" className="p-6 h-full overflow-y-auto">
-                <FilterSidebar params={params.data || {}} />
+                <FilterSidebar
+                  params={params.data || {}}
+                  busModels={busModels}
+                />
               </SheetContent>
             </Sheet>
           </div>
