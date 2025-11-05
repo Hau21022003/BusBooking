@@ -1,4 +1,5 @@
 import { DeliveryStatus } from "@/enums/delivery.enum";
+import { PaginationSchema } from "@/schemas/pagination.schema";
 import z from "zod";
 
 export const createDeliverySchema = z.object({
@@ -32,7 +33,7 @@ export const createDeliverySchema = z.object({
 
 export type CreateDeliveryInput = z.infer<typeof createDeliverySchema>;
 
-export const FindAllSchema = z.object({
+export const FindAllSchema = PaginationSchema.extend({
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
   search: z.string().optional(),

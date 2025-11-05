@@ -57,7 +57,7 @@ export default function FilterSidebar({
       <Collapsible className="space-y-2 " open={true}>
         <CollapsibleTrigger asChild>
           <div className={cn("flex items-center gap-3 cursor-pointer")}>
-            <p className={` text-xl font-bold uppercase`}>Loại xe</p>
+            <p className={` text-xl font-bold uppercase`}>Mẫu xe</p>
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="flex flex-col gap-1 mt-4">
@@ -75,6 +75,45 @@ export default function FilterSidebar({
                   }`}
                 >
                   <span className="truncate">{busModel.name}</span>
+                  <button className={`${checked ? "" : "hidden"}`}>
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </Link>
+            );
+          })}
+        </CollapsibleContent>
+      </Collapsible>
+      <div
+        className="border-t-2 border-black"
+        style={{
+          borderStyle: "dashed",
+          borderImage:
+            "repeating-linear-gradient(to right, black 0, black 8px, transparent 8px, transparent 16px) 1",
+        }}
+      />
+
+      <Collapsible className="space-y-2 " open={true}>
+        <CollapsibleTrigger asChild>
+          <div className={cn("flex items-center gap-3 cursor-pointer")}>
+            <p className={` text-xl font-bold uppercase`}>Số ghế trống</p>
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="flex flex-col gap-1 mt-4">
+          {[1, 2, 4, 8].map((availableSeats) => {
+            const checked = params.availableSeats === availableSeats;
+            const baseParams = getBaseParams("availableSeats");
+            const newParams = checked
+              ? baseParams
+              : `${baseParams}&availableSeats=${availableSeats}`;
+            return (
+              <Link key={availableSeats} href={`?${newParams}`}>
+                <div
+                  className={`px-4 py-[4px] flex items-center justify-between cursor-pointer ${
+                    checked ? "bg-gray-200" : "hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="truncate">{availableSeats} ghế trống</span>
                   <button className={`${checked ? "" : "hidden"}`}>
                     <X className="w-4 h-4" />
                   </button>

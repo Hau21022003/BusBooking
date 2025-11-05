@@ -88,12 +88,24 @@ export class TripService {
       ...(dto.busModelId && { bus: { busModelId: dto.busModelId } }),
     };
 
-    const data = await this.tripRepository.find({
+    const rawData = await this.tripRepository.find({
       where,
       order: { departureTime: 'ASC' },
     });
 
-    return data;
+    if (dto.availableSeats) {
+      const data = rawData.filter((trip) => {
+        const availableSeats = trip.seats.reduce(
+          (availableSeats, seat) =>
+            availableSeats + (seat.status === SeatStatus.AVAILABLE ? 1 : 0),
+          0,
+        );
+        return availableSeats >= dto.availableSeats;
+      });
+      return data;
+    } else {
+      return rawData;
+    }
   }
 
   findOne(id: number) {

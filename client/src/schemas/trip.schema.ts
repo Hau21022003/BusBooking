@@ -13,5 +13,6 @@ export const findAllPublicSchema = z.object({
   routeId: z.string(),
   date: z.string().datetime(),
   busModelId: z.number().optional(),
+  availableSeats: z.number().optional(),
 });
 export type FindAllPublic = z.infer<typeof findAllPublicSchema>;

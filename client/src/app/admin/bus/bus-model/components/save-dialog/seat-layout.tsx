@@ -1,25 +1,24 @@
 import SeatIcon, { SeatVariant } from "@/components/icon/seat-icon";
 import SteeringWheelIcon from "@/components/icon/steering-wheel-icon";
-import { FormField, FormItem } from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SeatType, seatTypeLabels } from "@/enums/bus-model.enum";
+import { SeatType, seatTypeLabels, seatVariantMap } from "@/enums/bus-model.enum";
 import { cn } from "@/lib/utils";
 import { CreateBusModel } from "@/schemas/bus-model.schema";
 import { Minus, Plus } from "lucide-react";
 import React, { Fragment } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-const seatVariantMap: Record<SeatType, SeatVariant> = {
-  [SeatType.FRONT]: "front",
-  [SeatType.MIDDLE]: "middle",
-  [SeatType.BACK]: "back",
-  [SeatType.STANDARD]: "default",
-  [SeatType.VIP]: "vip",
-};
+// const seatVariantMap: Record<SeatType, SeatVariant> = {
+//   [SeatType.FRONT]: "front",
+//   [SeatType.MIDDLE]: "middle",
+//   [SeatType.BACK]: "back",
+//   [SeatType.STANDARD]: "default",
+//   [SeatType.VIP]: "vip",
+// };
 
 export default function SeatLayout({
   form,

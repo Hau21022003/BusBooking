@@ -21,4 +21,8 @@ export class FindAllPublicDto {
   @IsNumber()
   @IsExists(BusModel)
   busModelId?: number;
+
+  @IsOptional()
+  @IsNumber()
+  availableSeats?: number;
 }

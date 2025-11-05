@@ -14,24 +14,28 @@ const HomePageParamsSchema = z.object({
   date: z.string().datetime().optional(),
   routeId: z.string().optional(),
   busModelId: z.number().optional(),
+  availableSeats: z.number().optional(),
 });
 
 export type HomePageParams = {
   date?: string;
   routeId?: string;
   busModelId?: number;
+  availableSeats?: number;
 };
 interface HomePageProps {
   searchParams: HomePageParams;
 }
 export default async function HomePage({ searchParams }: HomePageProps) {
-  const { date, routeId, busModelId } = await searchParams;
+  const { date, routeId, busModelId, availableSeats } = await searchParams;
 
   const rawParams: HomePageParams = {
     date,
     routeId,
     busModelId: busModelId ? Number(busModelId) : undefined,
+    availableSeats: availableSeats && Number(availableSeats),
   };
+
   const params = HomePageParamsSchema.safeParse(rawParams);
   if (!params.success) {
     console.error("Invalid query params");
@@ -50,6 +54,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       date: date ?? new Date().toISOString(),
       routeId: routeId || "",
       busModelId: busModelId && Number(busModelId),
+      availableSeats: availableSeats && Number(availableSeats),
     })
     .then((res) => res.payload)
     .catch((err) => {

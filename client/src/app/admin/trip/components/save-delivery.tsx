@@ -436,63 +436,72 @@ export default function SaveDelivery({ stations }: SaveDeliveryProps) {
                   </div>
                 </div>
               </div>
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem className="flex-1  w-full">
-                    <FormLabel>Chú thích</FormLabel>
-                    <Input
-                      className="bg-white"
-                      placeholder="Nhập chú thích"
-                      {...field}
-                    />
-                  </FormItem>
-                )}
-              />
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem className="flex-1  w-full">
+                        <FormLabel>Chú thích</FormLabel>
+                        <Input
+                          className="bg-white"
+                          placeholder="Nhập chú thích"
+                          {...field}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Trạng thái</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="w-full">
-                          {field.value ? (
-                            <div className="flex items-center gap-2">
-                              {getStatusIcon(field.value as DeliveryStatus)}
-                              <span>
-                                {
-                                  deliveryStatusLabels[
-                                    field.value as DeliveryStatus
-                                  ]
-                                }
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-muted-foreground">
-                              Chọn trạng thái giao hàng
-                            </span>
-                          )}
-                        </SelectTrigger>
-                      </FormControl>
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Trạng thái</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              {field.value ? (
+                                <div className="flex items-center gap-2">
+                                  {getStatusIcon(field.value as DeliveryStatus)}
+                                  <span>
+                                    {
+                                      deliveryStatusLabels[
+                                        field.value as DeliveryStatus
+                                      ]
+                                    }
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-muted-foreground">
+                                  Chọn trạng thái giao hàng
+                                </span>
+                              )}
+                            </SelectTrigger>
+                          </FormControl>
 
-                      <SelectContent>
-                        {Object.values(DeliveryStatus).map((value) => (
-                          <SelectItem key={value} value={value}>
-                            <div className="flex items-center gap-2">
-                              {getStatusIcon(value)}
-                              <span>{deliveryStatusLabels[value]}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
+                          <SelectContent>
+                            {Object.values(DeliveryStatus).map((value) => (
+                              <SelectItem key={value} value={value}>
+                                <div className="flex items-center gap-2">
+                                  {getStatusIcon(value)}
+                                  <span>{deliveryStatusLabels[value]}</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
 
               <div className="flex justify-end">
                 <button

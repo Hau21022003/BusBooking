@@ -2,7 +2,6 @@ import SaveBookingDialog from "@/app/admin/trip/components/trip-table/save-booki
 import SeatIcon, { SeatVariant } from "@/components/icon/seat-icon";
 import SteeringWheelIcon from "@/components/icon/steering-wheel-icon";
 import { PaymentStatus } from "@/enums/booking.enum";
-import { SeatType } from "@/enums/bus.enum";
 import { SeatStatus, TripStatus } from "@/enums/trip.enum";
 import { cn } from "@/lib/utils";
 import { SeatTrip, Trip } from "@/types/trip.type";
@@ -12,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTruckFast } from "@fortawesome/free-solid-svg-icons";
 import { useTripStore } from "@/app/admin/trip/store";
 import DeliveryTable from "@/app/admin/trip/components/trip-table/trip-detail/delivery-table";
+import { SeatType, seatVariantMap } from "@/enums/bus-model.enum";
 
 interface TripDetailProps {
   trip: Trip;
@@ -36,14 +36,6 @@ export default function TripDetail({ trip }: TripDetailProps) {
   const handleCloseDialog = () => {
     setTripInfo(undefined);
     setOpenSaveDialog(false);
-  };
-
-  const seatVariantMap: Record<SeatType, SeatVariant> = {
-    [SeatType.FRONT]: "front",
-    [SeatType.MIDDLE]: "middle",
-    [SeatType.BACK]: "back",
-    [SeatType.STANDARD]: "default",
-    [SeatType.VIP]: "vip",
   };
 
   return (

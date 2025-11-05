@@ -1,4 +1,4 @@
-import { SeatType } from "@/enums/bus.enum";
+import { SeatType } from "@/enums/bus-model.enum";
 import { SeatStatus, TripStatus } from "@/enums/trip.enum";
 import { Booking } from "@/types/booking.type";
 import { Bus } from "@/types/bus.type";

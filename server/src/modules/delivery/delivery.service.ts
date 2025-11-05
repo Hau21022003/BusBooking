@@ -32,13 +32,52 @@ export class DeliveryService {
   }
 
   async findAll(findAllDto: FindAllDto) {
-    const [data, total] = await this.deliveryRepository.findAndCount({
-      where: {},
-      order: { updatedAt: 'DESC' },
-      relations: ['bookings'],
-      skip: findAllDto.offset,
-      take: findAllDto.pageSize,
-    });
+    const query = this.deliveryRepository
+      .createQueryBuilder('delivery')
+      .leftJoinAndSelect('delivery.route', 'route')
+      .leftJoinAndSelect('delivery.pickupStation', 'pickupStation')
+      .leftJoinAndSelect('delivery.dropoffStation', 'dropoffStation')
+      .leftJoinAndSelect('delivery.trip', 'trip');
+
+    if (findAllDto.search) {
+      query.andWhere(
+        `(delivery.senderName ILIKE :search 
+        OR delivery.senderPhone ILIKE :search 
+        OR delivery.receiverName ILIKE :search 
+        OR delivery.receiverPhone ILIKE :search)`,
+        { search: `%${findAllDto.search}%` },
+      );
+    }
+
+    if (findAllDto.startDate && findAllDto.endDate) {
+      const start = new Date(findAllDto.startDate);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(findAllDto.endDate);
+      end.setHours(23, 59, 59, 999);
+
+      query.andWhere('delivery.createdAt BETWEEN :start AND :end', {
+        start,
+        end,
+      });
+    } else if (findAllDto.startDate) {
+      const start = new Date(findAllDto.startDate);
+      start.setHours(0, 0, 0, 0);
+
+      query.andWhere('delivery.createdAt >= :start', { start });
+    } else if (findAllDto.endDate) {
+      const end = new Date(findAllDto.endDate);
+      end.setHours(23, 59, 59, 999);
+
+      query.andWhere('delivery.createdAt <= :end', { end });
+    }
+
+    query
+      .take(findAllDto.pageSize)
+      .skip(findAllDto.offset)
+      .orderBy('delivery.updatedAt', 'DESC');
+
+    const [data, total] = await query.getManyAndCount();
 
     return {
       data,

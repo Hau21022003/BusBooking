@@ -16,7 +16,6 @@ interface TripPageProps {
 export default async function TripPage({ searchParams }: TripPageProps) {
   const { busId, endDate, pageNumber, routeId, startDate } = await searchParams;
 
-  console.log("pageNumber", pageNumber);
   const params: TripSearchParams = {
     busId,
     endDate,
