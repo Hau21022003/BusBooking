@@ -13,14 +13,15 @@ import { BookingStatus } from 'src/modules/booking/enums/booking-status.enum';
 import { Response } from 'express';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { CreateBookingPublicDto } from 'src/modules/booking/dto/create-booking-public.dto';
+import { FindAllDto } from 'src/modules/booking/dto/find-all.dto';
 
 @Controller('booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
   @Post('find-all')
-  findAll() {
-    return this.bookingService.findAll();
+  findAll(@Body() dto: FindAllDto) {
+    return this.bookingService.findAll(dto);
   }
 
   @Post()

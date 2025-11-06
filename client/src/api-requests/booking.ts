@@ -1,11 +1,16 @@
 import http from "@/lib/http";
-import { CreateBooking, CreateBookingPublic } from "@/schemas/booking.schema";
+import {
+  CreateBooking,
+  CreateBookingPublic,
+  FindAllInput,
+} from "@/schemas/booking.schema";
 import { Booking } from "@/types/booking.type";
+import { PaginatedResponse } from "@/types/pagination.type";
 
 const BASE_URL = "/booking";
 export const bookingApiRequest = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  find: (body: any) => http.post<Booking[]>(`${BASE_URL}/find-all`, body),
+  find: (body: FindAllInput) =>
+    http.post<PaginatedResponse<Booking>>(`${BASE_URL}/find-all`, body),
   create: (body: CreateBooking) => http.post<Booking>(BASE_URL, body),
   delete: (id: number) => http.delete(`${BASE_URL}/${id}`),
   confirmBooking: (id: number) => http.get(`${BASE_URL}/${id}/confirm`),

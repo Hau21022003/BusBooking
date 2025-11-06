@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { Booking } from 'src/modules/booking/entities/booking.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TripService } from 'src/modules/trip/trip.service';
 import { SeatStatus } from 'src/modules/trip/enums/seat-status.enum';
@@ -12,6 +12,7 @@ import * as handlebars from 'handlebars';
 import * as puppeteer from 'puppeteer';
 import { PaymentStatus } from 'src/modules/booking/enums/payment-status.enum';
 import { CreateBookingPublicDto } from 'src/modules/booking/dto/create-booking-public.dto';
+import { FindAllDto } from 'src/modules/booking/dto/find-all.dto';
 
 @Injectable()
 export class BookingService {
@@ -131,8 +132,26 @@ export class BookingService {
     return price;
   }
 
-  findAll() {
-    return this.bookingRepository.find({ order: { createdAt: 'DESC' } });
+  async findAll(findAllDto: FindAllDto) {
+    const { phone, bookingStatus, paymentStatus, pageSize, offset } =
+      findAllDto;
+
+    const [data, total] = await this.bookingRepository.findAndCount({
+      where: {
+        ...(phone ? { phone: ILike(`%${phone}%`) } : {}),
+        ...(bookingStatus ? { bookingStatus } : {}),
+        ...(paymentStatus ? { paymentStatus } : {}),
+      },
+      order: { createdAt: 'DESC' },
+      take: pageSize,
+      skip: offset,
+      relations: ['trip'],
+    });
+
+    return {
+      data,
+      total,
+    };
   }
 
   findOne(id: number) {

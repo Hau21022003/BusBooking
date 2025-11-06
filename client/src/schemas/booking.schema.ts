@@ -1,4 +1,5 @@
 import { BookingStatus, PaymentStatus } from "@/enums/booking.enum";
+import { PaginationSchema } from "@/schemas/pagination.schema";
 import z from "zod";
 
 export const SeatSchema = z.object({
@@ -28,3 +29,10 @@ export const CreateBookingPublicSchema = z.object({
   seat: SeatSchema,
 });
 export type CreateBookingPublic = z.infer<typeof CreateBookingPublicSchema>;
+
+export const FindAllSchema = PaginationSchema.extend({
+  phone: z.string().optional(),
+  bookingStatus: z.enum(BookingStatus).optional(),
+  paymentStatus: z.enum(PaymentStatus).optional(),
+});
+export type FindAllInput = z.infer<typeof FindAllSchema>;

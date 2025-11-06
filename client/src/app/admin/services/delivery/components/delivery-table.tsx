@@ -8,13 +8,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  faBoxOpen,
-  faBusSide,
   faCircleCheck,
   faCircleXmark,
   faClock,
   faLink,
-  faPenToSquare,
   faRotateLeft,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
