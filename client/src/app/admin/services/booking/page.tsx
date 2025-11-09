@@ -1,6 +1,7 @@
 import { bookingApiRequest } from "@/api-requests/booking";
 import BookingTable from "@/app/admin/services/booking/components/booking-table";
 import PaginationContainer from "@/app/admin/services/booking/components/pagination-container";
+import SearchContainer from "@/app/admin/services/booking/components/search-container";
 import { BookingStatus, PaymentStatus } from "@/enums/booking.enum";
 import { buildPaginatedMeta } from "@/lib/pagination";
 import { FindAllSchema } from "@/schemas/booking.schema";
@@ -51,11 +52,9 @@ export default async function BookingPage({ searchParams }: BookingPageProps) {
     total: total,
   });
 
-  console.log("data", data);
-
   return (
     <div className="space-y-4">
-      {/* <SearchContainer /> */}
+      <SearchContainer params={parsed.data} />
       <BookingTable bookings={data} />
       <PaginationContainer pageMeta={pageMeta} />
     </div>

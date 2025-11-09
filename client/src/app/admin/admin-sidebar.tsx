@@ -10,6 +10,7 @@ import {
   faHandHoldingDollar,
   faLocationDot,
   faRoute,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 
 const AdminSidebar = async () => {
@@ -49,6 +50,12 @@ const AdminSidebar = async () => {
       label: "Chuyến xe",
       url: "/admin/trip",
       active: pathname === "/admin/trip",
+    },
+    {
+      icon: <FontAwesomeIcon icon={faUsers} size="xl" className="w-6 h-6" />,
+      label: "Người dùng",
+      url: "/admin/users",
+      active: pathname === "/admin/users",
     },
     {
       icon: (

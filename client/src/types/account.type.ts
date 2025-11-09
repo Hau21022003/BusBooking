@@ -1,11 +1,16 @@
-import { Role } from "@/enums/user-role.enum";
+import { CreateAccountInput } from "@/schemas/account.schema";
 
-export type Account = {
+// export type Account = {
+//   id: string;
+//   fullName: string;
+//   avatar?: string;
+//   email: string;
+//   role: Role;
+//   isActive: boolean;
+//   createdAt: string;
+// };
+
+export type Account = CreateAccountInput & {
   id: string;
-  fullName: string;
-  avatar?: string;
-  email: string;
-  role: Role;
-  isActive: boolean;
   createdAt: string;
 };

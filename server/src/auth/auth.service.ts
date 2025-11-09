@@ -13,7 +13,7 @@ import { hashData } from 'src/common/utils/hash.util';
 import EmailUtil from 'src/common/utils/email.util';
 import { AuthDto } from 'src/auth/dto/auth.dto';
 import { JwtPayload } from 'src/auth/types/jwt-payload';
-import { User } from 'src/modules/users/entities/user.entity';
+import { Role, User } from 'src/modules/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -144,9 +144,10 @@ export class AuthService {
       userExists = await this.usersService.create({
         email: user.email,
         password: '',
-        firstName: user.firstName,
-        lastName: user.lastName,
+        fullName: user.firstName + ' ' + user.lastName,
         avatar: user.picture,
+        role: Role.STATION_STAFF,
+        isActive: true,
       });
     }
     const tokens = await this.getTokens(userExists);

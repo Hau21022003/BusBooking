@@ -20,7 +20,6 @@ import {
   CreateSchedule,
   createScheduleSchema,
 } from "@/schemas/schedule.schema";
-import { SeatType } from "@/enums/bus.enum";
 import { Bus } from "@/types/bus.type";
 import { Route } from "@/types/route.type";
 import Combobox from "@/components/combobox";
@@ -29,7 +28,7 @@ import { Plus, X } from "lucide-react";
 import { handleErrorApi } from "@/lib/error";
 import { useRouter } from "next/navigation";
 import { scheduleApiRequest } from "@/api-requests/schedule";
-import { seatTypeLabels } from "@/enums/bus-model.enum";
+import { SeatType, seatTypeLabels } from "@/enums/bus-model.enum";
 
 interface SaveDialogProps {
   open: boolean;

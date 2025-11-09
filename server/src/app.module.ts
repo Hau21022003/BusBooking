@@ -21,6 +21,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { DeliveryModule } from 'src/modules/delivery/delivery.module';
 import { SettingsModule } from 'src/modules/settings/settings.module';
 import { BusModelModule } from 'src/modules/bus-model/bus-model.module';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -59,6 +60,10 @@ import { BusModelModule } from 'src/modules/bus-model/bus-model.module';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     IsExistConstraint,
   ],

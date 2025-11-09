@@ -20,10 +20,10 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ nullable: true })
-  firstName: string;
+  fullName: string;
 
   @Column({ nullable: true })
-  lastName: string;
+  phone: string;
 
   @Column({ nullable: true })
   avatar: string;
